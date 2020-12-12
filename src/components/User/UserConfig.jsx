@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import BackgroundSpaceImg7 from "../../assets/background-space7.png";
 import User from "../../assets/icon/user.png";
 import Edit from "../../assets/icon/edit.svg";
@@ -51,14 +51,36 @@ const WhiteContainer = styled.div`
   width: 85%;
 
   /*Dividir el contenedor para direccion y botones al lado */
-  .user-config-grid {
+  .user-config-grid-3 {
     display: grid;
     grid-template-columns: 15% 70% 15%;
   }
 
-  div {
+  /*Dividir el contenedor para direccion y botones al lado */
+  .user-config-grid-2 {
+    display: grid;
+    grid-template-columns: 20% 80%;
+  }
+
+  /*Display block del form de usuario */
+  .form-container-user-config {
+    display: block !important;
+    text-align: left;
+  }
+
+  .form-control {
+    width: 90%;
+    height: 2rem;
+  }
+  .vertical-center-align {
     display: -webkit-inline-box;
     align-items: center;
+  }
+
+  .small-gray-font {
+    color: #696969;
+    font-size: 0.8rem;
+    letter-spacing: 0.05rem;
   }
 
   img {
@@ -78,6 +100,15 @@ const WhiteContainer = styled.div`
 
   button {
     /* margin: 0 10px; */
+  }
+
+  .buttons-user-configuration {
+    width: 5.2rem;
+    margin: 0 0.8rem;
+  }
+
+  .user-icon-config {
+    width: 4.5rem;
   }
 
   /************ 320 ************/
@@ -121,26 +152,59 @@ const WhiteContainer = styled.div`
 `;
 
 function UserConfig() {
+  const [editUser, setEditUser] = useState(false);
   return (
     <UserConfigContainer>
       <p>Ajustes de usuario</p>
       <p className='small-font'>Mi cuenta</p>
       <WhiteContainer>
-        <div className='user-config-grid'>
-          <div>
-            <img src={User} alt='User icon'></img>
+        {!editUser ? (
+          <div className='user-config-grid-3'>
+            <div className='vertical-center-align'>
+              <img src={User} alt='User icon'></img>
+            </div>
+            <div className='vertical-center-align'>
+              <p className='user-information'>
+                Juan Pablo Cabellos Aguilar <br></br>juanpunch123@gmail.com
+              </p>
+            </div>
+            <div className='vertical-center-align'>
+              <Button variant='primary' onClick={() => setEditUser(true)}>
+                <img src={Edit} alt='editar icon' className='edit-icon'></img>
+              </Button>
+            </div>
           </div>
-          <div>
-            <p className='user-information'>
-              Juan Pablo Cabellos Aguilar <br></br>juanpunch123@gmail.com
-            </p>
-          </div>
-          <div>
-            <Button variant='primary'>
-              <img src={Edit} alt='editar icon' className='edit-icon'></img>
+        ) : (
+          <div className='user-config-grid-2'>
+            <div className='vertical-center-align'>
+              <img src={User} alt='User icon' className='user-icon-config'></img>
+            </div>
+            <div className='form-container-user-config'>
+              <Form>
+                <Form.Group controlId='formBasicEmail'>
+                  <Form.Label className='small-gray-font'>Correo electrónico:</Form.Label>
+                  <Form.Control type='email' placeholder='Enter email' />
+                </Form.Group>
+                <Form.Group controlId='formBasicPassword'>
+                  <Form.Label className='small-gray-font'>Contraseña:</Form.Label>
+                  <Form.Control type='password' placeholder='Password' />
+                </Form.Group>
+              </Form>
+              <hr></hr>
+            </div>
+            <Button variant='danger' className='buttons-user-configuration'>
+              Eliminar
             </Button>
+            <div className='container-buttons-user-config'>
+              <Button variant='outline-primary' className='buttons-user-configuration'>
+                Cancelar
+              </Button>
+              <Button variant='primary' className='buttons-user-configuration'>
+                Guardar
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </WhiteContainer>
     </UserConfigContainer>
   );
