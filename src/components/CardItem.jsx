@@ -86,11 +86,14 @@ const CardContainer = styled.div`
   }
 `;
 
-function CardItem({ imagenProducto, nombreCamisa }) {
+function CardItem({ imagenProducto, nombreCamisa,id }) {
   return (
     <CardContainer>
       <span className='cuadrado'>
-        <img src={imagenProducto} alt='camisa 1'></img>
+      <a href={`/productos/${id}`}>
+      <img src={imagenProducto} alt='camisa 1'></img>    
+            </a>
+        
         <h3>{nombreCamisa}</h3>
       </span>
     </CardContainer>

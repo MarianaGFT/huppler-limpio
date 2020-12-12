@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Product from './components/Item/Product'
 
 import AddressView from "./components/Address/AddressView";
+import Address from './components/Address/Address'
 import User from './containers/User'
 
 function App() {
@@ -49,6 +50,8 @@ function App() {
             <Route exact path='/login' component={LogIn} />
             <Route exact path='/user' component={UserConfig} />
             <Route exact path='/productos/:id' component={Product}/>
+            <Route exact path='/adresses'component={AddressView}/>
+            <Route exact path='/adresses/add' component={Address}/>
           </Switch>
         </Router>
       </div>

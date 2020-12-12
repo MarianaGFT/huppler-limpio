@@ -38,6 +38,9 @@ const WhiteContainer = styled.div`
   .form-control {
     width: 90%;
     margin: 0 auto;
+    height:40px;
+    color:black;
+    background-color:lightgray
   }
 
   .text-muted {
@@ -141,7 +144,7 @@ function LogIn({history}) {
       <img src={Logo} alt='Logo huppler'></img>
       <WhiteContainer>
         <p>INICIAR SESIÓN</p>
-        <Form  onSubmit={onSubmitHandler}>
+        <Form onSubmit={onSubmitHandler}>
           <Form.Group controlId='formBasicEmail'>
             <Form.Control type='email' 
             placeholder='Correo Electrónico'
@@ -162,6 +165,7 @@ function LogIn({history}) {
             ACCEDER
           </Button>
         </Form>
+        
       </WhiteContainer>
     </LoginContainer>
   );

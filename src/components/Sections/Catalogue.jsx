@@ -182,7 +182,7 @@ function Catalogue() {
       try {
         const response = await fetchData("GET", "/productos");
         setProducts(response.data);
-        // console.log(response);
+        console.log(products);
         //Ya cargó los datos
         setLoading(false);
       } catch (error) {
@@ -211,14 +211,14 @@ function Catalogue() {
         <h2>Nuestro catálogo</h2>
       </div>
       <CatalogueGrid>
-        <CardItem imagenProducto={CamisaCore} nombreCamisa='Camisa Core' />
-        <CardItem imagenProducto={CamisaHigh} nombreCamisa='Camisa High' />
-        <CardItem imagenProducto={CamisaOrbits} nombreCamisa='Camisa Orbits' />
-        <CardItem imagenProducto={CamisaPlanets} nombreCamisa='Camisa Planets' />
-        <CardItem imagenProducto={CamisaSpace} nombreCamisa='Camisa Space' />
-        <CardItem imagenProducto={CamisaSun} nombreCamisa='Camisa Sun' />
-        <CardItem imagenProducto={CamisaSkull} nombreCamisa='Camisa Skull' />
-        <CardItem imagenProducto={CamisaCore} nombreCamisa='Camisa Core' />
+        {products.map((product)=>{
+          return(
+        <CardItem imagenProducto={product.imagenes.length > 0
+          ? imageSrc + product.imagenes[0].nombreImagen
+          : CamisaCore} nombreCamisa={product.nombre} id={product.id} />
+        )}) }
+        
+      
       </CatalogueGrid>
     </CatalogueContainer>
   );
