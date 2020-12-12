@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Button, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import BackgroundSpaceImg7 from "../../assets/background-space7.png";
 import User from "../../assets/icon/user.png";
 import Edit from "../../assets/icon/edit.svg";
+import Back from "../../assets/icon/back.svg";
 
 const UserConfigContainer = styled.div`
   background-image: url(${BackgroundSpaceImg7});
@@ -14,8 +16,12 @@ const UserConfigContainer = styled.div`
   background-color: #464646;
   width: 100%;
   height: 100vh;
-  text-align: center;
-  padding: 3rem 0;
+  text-align: left;
+  padding-top: 80px;
+
+  .back-icon-user-config {
+    width: 2rem;
+  }
 
   p {
     /* position: relative; */
@@ -155,6 +161,10 @@ function UserConfig() {
   const [editUser, setEditUser] = useState(false);
   return (
     <UserConfigContainer>
+      <Link to='/'>
+        <img src={Back} alt='back icon' className='back-icon-user-config'></img>
+      </Link>
+
       <p>Ajustes de usuario</p>
       <p className='small-font'>Mi cuenta</p>
       <WhiteContainer>
@@ -199,7 +209,11 @@ function UserConfig() {
               <Button variant='outline-primary' className='buttons-user-configuration'>
                 Cancelar
               </Button>
-              <Button variant='primary' className='buttons-user-configuration'>
+              <Button
+                variant='primary'
+                className='buttons-user-configuration'
+                onClick={() => setEditUser(false)}
+              >
                 Guardar
               </Button>
             </div>
