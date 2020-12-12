@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import styled from "styled-components";
 import { Button, Form } from "react-bootstrap";
 import BackgroundSpaceImg7 from "../../assets/background-space7.png";
 import User from "../../assets/icon/user.png";
 import Edit from "../../assets/icon/edit.svg";
+import jwt_decode from 'jwt-decode';
 
 const UserConfigContainer = styled.div`
   background-image: url(${BackgroundSpaceImg7});
@@ -152,6 +153,12 @@ const WhiteContainer = styled.div`
 `;
 
 function UserConfig() {
+  useEffect(() => {
+    const token=localStorage.getItem('usuario')
+    const usuario= jwt_decode(token);
+    console.log(usuario)
+  }, [])
+ 
   const [editUser, setEditUser] = useState(false);
   return (
     <UserConfigContainer>
@@ -196,7 +203,8 @@ function UserConfig() {
               Eliminar
             </Button>
             <div className='container-buttons-user-config'>
-              <Button variant='outline-primary' className='buttons-user-configuration'>
+              <Button variant='outline-primary' className='buttons-user-configuration'
+               onClick={() => setEditUser(false)} >
                 Cancelar
               </Button>
               <Button variant='primary' className='buttons-user-configuration'>

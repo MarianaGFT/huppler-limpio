@@ -85,7 +85,7 @@ function LogIn({history}) {
   const sesion=localStorage.getItem('usuario')
   const [token,setToken]=useState(sesion ? sesion:'')
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [errorS, setError] = useState(null);
   const imageSrc = constants.apiEndPoint + "/public/img/";
   const {correo,contrasena}=usuario;
 
@@ -111,9 +111,12 @@ function LogIn({history}) {
 
     try {
       const response = await fetchData("POST", "/login",usuario);
-      setToken(response.data);
-      console.log(response.data.token)
-      localStorage.setItem('usuario',response.data.token)
+      if(response){
+        setToken(response.data);
+        console.log(response.data.token)
+        localStorage.setItem('usuario',response.data.token)
+      }
+      
       // console.log(response);
       //Ya cargó los datos
       setLoading(false);
@@ -124,20 +127,20 @@ function LogIn({history}) {
       console.log(error);
     }
     // setLoading(false);
+    if (errorS) {
+      return "Error: ${error.response.message}";
+    }
+  
+    if (loading === true) {
+      return "Loading...";
+    }
   };
   const onSubmitHandler=e=>{
    e.preventDefault();
+   console.log(usuario)
    fetchProducts(usuario);
-   if (error) {
-    return "Error: ${error.response.message}";
+ 
   }
-
-  if (loading === true) {
-    return "Loading...";
-  }
-  }
-  
-
 
   return ( 
     <LoginContainer>

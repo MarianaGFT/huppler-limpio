@@ -171,7 +171,7 @@ const Navbar = ({ open, setOpen,history }) => {
           <a href='#contacto'>
             <img src={Contact} alt='shirt' title='Contacto' className='icons-navbar'></img>
           </a>
-        </button>
+        </button>z
       </Nav>
     </>
   );

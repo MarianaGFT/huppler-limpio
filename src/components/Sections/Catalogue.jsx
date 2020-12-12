@@ -192,18 +192,20 @@ function Catalogue() {
         console.log(error);
       }
       // setLoading(false);
+      if (error) {
+        return "Error: ${error.response.message}";
+      }
+    
+      if (loading === true) {
+        return "Loading...";
+      }
     };
+   
 
     fetchProducts();
   }, []);
 
-  if (error) {
-    return "Error: ${error.response.message}";
-  }
-
-  if (loading === true) {
-    return "Loading...";
-  }
+  
 
   return (
     <CatalogueContainer id='catalogo'>
