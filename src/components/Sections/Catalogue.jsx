@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import styled from "styled-components";
 import CardItem from "../CardItem";
 import BackgroundSpaceImg5 from "../../assets/background-space5.jpg";
@@ -13,6 +13,9 @@ import Camisa1 from "../../assets/camisa1.png";
 import Camisa2 from "../../assets/camisa2.png";
 import Camisa3 from "../../assets/camisa3.png";
 import Camisa6 from "../../assets/camisa6.png";
+import constants from '../../constants/apiEndPoint'
+//Services
+import useApi from "../../services/api";
 
 const CatalogueContainer = styled.div`
   /* background-image: url(${BackgroundSpaceImg5});
@@ -162,6 +165,46 @@ const CatalogueGrid = styled.div`
 `;
 
 function Catalogue() {
+  const fetchData = useApi();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const imageSrc = constants.apiEndPoint + "/public/img/";
+
+  //ComponentDidMount = Cuando la pagina cargue, asegura que el código ya esta listo
+  useEffect(() => {
+    const fetchProducts = async () => {
+      //Cargando datos
+      setLoading(true);
+      //No hay ningún error
+      setError(null);
+
+      try {
+        const response = await fetchData("GET", "/productos");
+        setProducts(response.data);
+        // console.log(response);
+        //Ya cargó los datos
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        //No hay ningún error
+        setError(error);
+        console.log(error);
+      }
+      // setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (error) {
+    return "Error: ${error.response.message}";
+  }
+
+  if (loading === true) {
+    return "Loading...";
+  }
+
   return (
     <CatalogueContainer id='catalogo'>
       <div className='container-title'>

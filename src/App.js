@@ -9,12 +9,15 @@ import Landing from "./components/Landing/Landing";
 import LogIn from "./components/LogIn/LogIn";
 import UserConfig from "./components/User/UserConfig";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Product from './components/Item/Product'
 
 import AddressView from "./components/Address/AddressView";
+import User from './containers/User'
 
 function App() {
   const [open, setOpen] = useState(false);
   return (
+    <User.Provider>
     <>
       <div>
         <Navbar open={open} setOpen={setOpen} />
@@ -45,10 +48,12 @@ function App() {
             <Route exact path='/domicilio' component={AddressView} />
             <Route exact path='/login' component={LogIn} />
             <Route exact path='/user' component={UserConfig} />
+            <Route exact path='/productos/:id' component={Product}/>
           </Switch>
         </Router>
       </div>
     </>
+    </User.Provider>
   );
 }
 

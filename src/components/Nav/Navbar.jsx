@@ -7,6 +7,7 @@ import Help from "../../assets/icon/help.png";
 import Contact from "../../assets/icon/contact.png";
 import Logo from "../../assets/icon/Logo-huppler.png";
 import Rocket from "../../assets/icon/rocket.png";
+import {Link} from 'react-router-dom'
 
 const Nav = styled.nav`
   width: 100%;
@@ -135,7 +136,7 @@ const Nav = styled.nav`
   } */
 `;
 
-const Navbar = ({ open, setOpen }) => {
+const Navbar = ({ open, setOpen,history }) => {
   var prevScrollpos = window.pageYOffset;
   window.onscroll = function () {
     var currentScrollPos = window.pageYOffset;

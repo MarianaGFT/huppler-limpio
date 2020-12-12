@@ -10,15 +10,17 @@ import Ex3 from "../../assets/shirts/ex3.png";
 import GuiaTallas from "../../assets/tallas-guia.png";
 
 const ShoppingViewContainer = styled.div`
-  /* background-image: url(${BackgroundSpaceImg5});
+  background-image: url(${BackgroundSpaceImg5});
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
   background-color: #464646;
   width: 100%;
-  height: auto; */
+  height: auto; 
   color: #fff;
+  padding-top:100px;
+ 
 
   .btn-info {
     color: #fff;
@@ -34,10 +36,12 @@ const ShoppingViewContainer = styled.div`
     grid-template-columns: repeat(1, 50%);
     justify-content: center;
     height: auto;
+    
   }
 
   .inf-container {
-    text-align: -webkit-center;
+    text-align: -webkit-left;
+    margin-left:200px;
   }
 
   /* RADIOBUTTON ELEGIR TALLA */
@@ -64,6 +68,9 @@ const ShoppingViewContainer = styled.div`
     border-radius: 10px !important;
     color: #000;
     font-weight: 600;
+  }
+  .btn-cohete{
+    margin-bottom:10px
   }
 
   /*BOTON MODAL TALLAS*/
@@ -338,6 +345,15 @@ function Product() {
               Eliminar
             </Button>
           )*/}
+          <div className="btn-cohete">
+          <Button variant='info' type='button'>
+              Añadir al cohete
+            </Button>
+            </div>
+
+            <Button variant='info' type='button'>
+              Añadir al cohete
+            </Button>
         </div>
       </div>
     </ShoppingViewContainer>

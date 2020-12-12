@@ -34,7 +34,7 @@ const CardContainer = styled.div`
   @media screen and (min-width: 320px) {
     span {
       width: 85%;
-      height: 120%;
+      height: 70%;
     }
 
     span img {
@@ -71,6 +71,7 @@ const CardContainer = styled.div`
     span {
       width: 190px;
       height: 260px;
+      margin-left:70px
     }
 
     span img {
