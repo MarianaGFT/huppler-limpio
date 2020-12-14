@@ -168,11 +168,12 @@ const HeroContainer = styled.div`
   }
 `;
 
-function Hero() {
+function Hero({history}) {
+
   return (
     <HeroContainer id='inicio'>
       <div className='rocket-container'>
-        <img src={Rocket} alt='white rocket'></img>
+        <img src={Rocket} alt='white rocket' ></img>
       </div>
       <div className='hero-logo'>
         <img src={LogoHuppler} alt='Logo Huppler'></img>

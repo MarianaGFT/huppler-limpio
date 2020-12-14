@@ -136,7 +136,7 @@ const ItemPurchaseDiv = styled.div`
   }
 `;
 
-function ShoppingRocket() {
+function ShoppingRocket({history}) {
   return (
     <ShoppingRocketContainer>
       <h3>Tu cohete de compra</h3>
@@ -181,7 +181,7 @@ function ShoppingRocket() {
         </div>
       </ItemPurchaseDiv>
       <div>
-        <Button variant='info'>Seguir comprando</Button>
+        <Button variant='info' onClick={()=>history.push('/')}>Seguir comprando</Button>
         <Button variant='info'>Finalizar compra</Button>
       </div>
     </ShoppingRocketContainer>

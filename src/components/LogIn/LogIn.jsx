@@ -1,10 +1,10 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import styled from "styled-components";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button,Alert } from "react-bootstrap";
 import BackgroundSpaceImg7 from "../../assets/background-space7.png";
 import Logo from "../../assets/logo-huppler.png";
-import useApi from '../../services/api'
-import constants from '../../constants/apiEndPoint'
+import {usuarioContext} from '../../context/Usuarios/UsuariosState'
+
 
 
 const LoginContainer = styled.div`
@@ -77,16 +77,11 @@ const WhiteContainer = styled.div`
 `;
 
 function LogIn({history}) {
-  const fetchData = useApi();
+  const{token,autenticado,Login,error}=useContext(usuarioContext)
   const [usuario, setUsuario] = useState({
   correo:'',
   contrasena:''
   });
-  const sesion=localStorage.getItem('usuario')
-  const [token,setToken]=useState(sesion ? sesion:'')
-  const [loading, setLoading] = useState(true);
-  const [errorS, setError] = useState(null);
-  const imageSrc = constants.apiEndPoint + "/public/img/";
   const {correo,contrasena}=usuario;
 
   //ComponentDidMount = Cuando la pagina cargue, asegura que el código ya esta listo
@@ -102,43 +97,10 @@ function LogIn({history}) {
      })
      console.log(usuario)
   }
-
-  const fetchProducts = async (usuario) => {
-    //Cargando datos
-    setLoading(true);
-    //No hay ningún error
-    setError(null);
-
-    try {
-      const response = await fetchData("POST", "/login",usuario);
-      if(response){
-        setToken(response.data);
-        console.log(response.data.token)
-        localStorage.setItem('usuario',response.data.token)
-      }
-      
-      // console.log(response);
-      //Ya cargó los datos
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      //No hay ningún error
-      setError(error);
-      console.log(error);
-    }
-    // setLoading(false);
-    if (errorS) {
-      return "Error: ${error.response.message}";
-    }
-  
-    if (loading === true) {
-      return "Loading...";
-    }
-  };
   const onSubmitHandler=e=>{
    e.preventDefault();
    console.log(usuario)
-   fetchProducts(usuario);
+  Login(usuario)
  
   }
 
@@ -147,6 +109,7 @@ function LogIn({history}) {
       <img src={Logo} alt='Logo huppler'></img>
       <WhiteContainer>
         <p>INICIAR SESIÓN</p>
+        {error?<Alert variant='danger'>{error}</Alert>:null}
         <Form onSubmit={onSubmitHandler}>
           <Form.Group controlId='formBasicEmail'>
             <Form.Control type='email' 

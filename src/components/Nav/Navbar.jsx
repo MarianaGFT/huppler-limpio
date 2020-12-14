@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect,useContext} from "react";
 import styled from "styled-components";
 import Burger from "./Burger";
 import Home from "../../assets/icon/home.png";
@@ -8,7 +8,8 @@ import Contact from "../../assets/icon/contact.png";
 import Logo from "../../assets/icon/Logo-huppler.png";
 import Rocket from "../../assets/icon/rocket.png";
 import {Link} from 'react-router-dom'
-
+import {Dropdown,DropdownButton} from 'react-bootstrap'
+import {usuarioContext} from '../../context/Usuarios/UsuariosState'
 const Nav = styled.nav`
   width: 100%;
   height: 60px;
@@ -33,7 +34,13 @@ const Nav = styled.nav`
   .rocket-container img {
     width: 35px;
   }
+  .cohete-sesion{
+    color:white
+  }
 
+  .coehete{
+    margin-left:0;
+  }
   /************ 480 ************/
   @media screen and (min-width: 480px) {
     background-color: #262626;
@@ -136,7 +143,10 @@ const Nav = styled.nav`
   } */
 `;
 
-const Navbar = ({ open, setOpen,history }) => {
+const Navbar = ({ open, setOpen }) => {
+  const {token,LogOut}=useContext(usuarioContext)
+ 
+
   var prevScrollpos = window.pageYOffset;
   window.onscroll = function () {
     var currentScrollPos = window.pageYOffset;
@@ -147,8 +157,10 @@ const Navbar = ({ open, setOpen,history }) => {
     }
     prevScrollpos = currentScrollPos;
   };
+  const userHandler=e=>{
+  
+  }
   return (
-    <>
       <Nav id='navbar'>
         <Burger open={open} setOpen={setOpen} />
         <img src={Logo} alt='Logo huppler' className='logo-huppler'></img>
@@ -171,9 +183,28 @@ const Navbar = ({ open, setOpen,history }) => {
           <a href='#contacto'>
             <img src={Contact} alt='shirt' title='Contacto' className='icons-navbar'></img>
           </a>
-        </button>z
+        </button>
+        {!token ?(
+          
+            <a href='/login'>
+              <p className='cohete-sesion'>Iniciar Sesion</p>
+            </a> 
+            
+        ):(
+        <DropdownButton id="dropdown-basic-button" title="User">
+        <Dropdown.Item href="#/action-1" onClick={userHandler} 
+        ><a href='/user'>Ajustes de usuario</a></Dropdown.Item>
+        <Dropdown.Item href="#/action-2" onClick={()=>LogOut()} >Cerrar Sesion</Dropdown.Item>
+      </DropdownButton>
+        )
+        } 
+        <button>
+          <a href='/cohete-de-compra'>
+            <img src={Rocket} alt='shirt' title='Cohete' className='icons-navbar cohete'></img>
+          </a>
+        </button>
+        
       </Nav>
-    </>
   );
 };
 

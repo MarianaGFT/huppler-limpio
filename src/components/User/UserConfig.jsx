@@ -1,10 +1,17 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useContext} from "react";
 import styled from "styled-components";
 import { Button, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import BackgroundSpaceImg7 from "../../assets/background-space7.png";
 import User from "../../assets/icon/user.png";
 import Edit from "../../assets/icon/edit.svg";
 import jwt_decode from 'jwt-decode';
+import Back from "../../assets/icon/back.svg";
+import constants from '../../constants/apiEndPoint'
+//Services
+import useApi from "../../services/api";
+import axios from "axios";
+import {usuarioContext} from '../../context/Usuarios/UsuariosState'
 
 const UserConfigContainer = styled.div`
   background-image: url(${BackgroundSpaceImg7});
@@ -15,9 +22,15 @@ const UserConfigContainer = styled.div`
   background-color: #464646;
   width: 100%;
   height: 100vh;
-  text-align: center;
-  padding: 3rem 0;
+  text-align: left;
+  padding-top: 80px;
 
+  .back-icon-user-config {
+    width: 2rem;
+  }
+  .form-control{
+    color:black;
+  }
   p {
     /* position: relative; */
     /* right: 35px; */
@@ -152,16 +165,54 @@ const WhiteContainer = styled.div`
   }
 `;
 
-function UserConfig() {
-  useEffect(() => {
-    const token=localStorage.getItem('usuario')
-    const usuario= jwt_decode(token);
-    console.log(usuario)
-  }, [])
- 
+function UserConfig({history}) {
+  const [usuario2,setUsuario]=useState({
+    correo:'',
+    correoActual:'',
+    contrasenaActual:'',
+    contrasenaNueva:''
+
+  })
   const [editUser, setEditUser] = useState(false);
+  const {nombre,apellido,correo:correoUser,ObtenerDefault, ObtenerUsuario,token}=useContext(usuarioContext)
+  const {correo,contrasenaActual,contrasenaNueva,correoActual}=usuario2;
+  const usuarioToken= jwt_decode(token);
+  useEffect(() => {
+    if(!token)history.push('/')
+    axios.defaults.headers.common['Authorization']=token;
+    ObtenerUsuario(usuarioToken.user.id)
+    ObtenerDefault(usuarioToken.user.id)
+    setUsuario({
+      ...usuario2,
+      correoActual:correoUser
+    })
+    console.log(usuario2)
+  }, [correoUser])
+  const onChangeHandler=e=>{
+    setUsuario({
+      [e.target.name]:e.target.value
+    })
+  }
+  const onClickHandler=e=>{
+    setUsuario({
+      ...usuario2,
+      correoActual:correoUser,
+      correo:''
+    })
+    setEditUser(false)
+  }
+  const formHandler=(e)=>{
+     e.preventDefault()
+     if(contrasenaActual===''){
+       console.log('xd')
+     }
+  }
   return (
     <UserConfigContainer>
+      <Link to='/'>
+        <img src={Back} alt='back icon' className='back-icon-user-config'></img>
+      </Link>
+
       <p>Ajustes de usuario</p>
       <p className='small-font'>Mi cuenta</p>
       <WhiteContainer>
@@ -172,7 +223,7 @@ function UserConfig() {
             </div>
             <div className='vertical-center-align'>
               <p className='user-information'>
-                Juan Pablo Cabellos Aguilar <br></br>juanpunch123@gmail.com
+               {nombre} {apellido} <br></br>{correoUser}
               </p>
             </div>
             <div className='vertical-center-align'>
@@ -187,14 +238,36 @@ function UserConfig() {
               <img src={User} alt='User icon' className='user-icon-config'></img>
             </div>
             <div className='form-container-user-config'>
-              <Form>
+              <Form onSubmit={formHandler}> 
                 <Form.Group controlId='formBasicEmail'>
                   <Form.Label className='small-gray-font'>Correo electrónico:</Form.Label>
-                  <Form.Control type='email' placeholder='Enter email' />
+                  <Form.Control type='email' 
+                  placeholder='Enter email' 
+                  value={correoActual}
+                  name='correoActual'
+                  onChange={onChangeHandler}/>
+                </Form.Group>
+                <Form.Group controlId='formBasicEmail-new'>
+                  <Form.Label className='small-gray-font'>Nuevo Correo electrónico:</Form.Label>
+                  <Form.Control type='email' 
+                  placeholder='Enter new email' 
+                  value={correo}
+                  name='correo'
+                  onChange={onChangeHandler}/>
                 </Form.Group>
                 <Form.Group controlId='formBasicPassword'>
                   <Form.Label className='small-gray-font'>Contraseña:</Form.Label>
-                  <Form.Control type='password' placeholder='Password' />
+                  <Form.Control type='password' placeholder='Password'
+                  value={contrasenaActual}
+                  name='contrasenaActual'
+                  onChange={onChangeHandler} />
+                </Form.Group>
+                <Form.Group controlId='formBasicPasswordNew'>
+                  <Form.Label className='small-gray-font'>Nueva Contraseña:</Form.Label>
+                  <Form.Control type='password' placeholder='Password'
+                  value={contrasenaNueva}
+                  name='contrasenaNueva'
+                  onChange={onChangeHandler} />
                 </Form.Group>
               </Form>
               <hr></hr>
@@ -204,10 +277,15 @@ function UserConfig() {
             </Button>
             <div className='container-buttons-user-config'>
               <Button variant='outline-primary' className='buttons-user-configuration'
-               onClick={() => setEditUser(false)} >
+               onClick={onClickHandler} >
                 Cancelar
               </Button>
-              <Button variant='primary' className='buttons-user-configuration'>
+              <Button
+                variant='primary'
+                type="submit"
+                className='buttons-user-configuration'
+                onClick={formHandler}
+              >
                 Guardar
               </Button>
             </div>

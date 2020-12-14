@@ -1,22 +1,11 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import styled from "styled-components";
 import CardItem from "../CardItem";
 import BackgroundSpaceImg5 from "../../assets/background-space5.jpg";
 import CamisaCore from "../../assets/clothes/Core.png";
-import CamisaHigh from "../../assets/clothes/High.png";
-import CamisaOrbits from "../../assets/clothes/Orbits.png";
-import CamisaPlanets from "../../assets/clothes/Planets.png";
-import CamisaSkull from "../../assets/clothes/Skull.png";
-import CamisaSpace from "../../assets/clothes/Space.png";
-import CamisaSun from "../../assets/clothes/Sun.png";
-import Camisa1 from "../../assets/camisa1.png";
-import Camisa2 from "../../assets/camisa2.png";
-import Camisa3 from "../../assets/camisa3.png";
-import Camisa6 from "../../assets/camisa6.png";
 import constants from '../../constants/apiEndPoint'
-//Services
-import useApi from "../../services/api";
-
+//context
+import {productosContext} from '../../context/Producto/ProductoState'
 const CatalogueContainer = styled.div`
   /* background-image: url(${BackgroundSpaceImg5});
   background-position: center center;
@@ -164,63 +153,28 @@ const CatalogueGrid = styled.div`
   }
 `;
 
-function Catalogue() {
-  const fetchData = useApi();
-  const [products, setProducts] = useState([]);
+function Catalogue({history}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const imageSrc = constants.apiEndPoint + "/public/img/";
-
+  const {productos,obtenerProductos}=useContext(productosContext)
   //ComponentDidMount = Cuando la pagina cargue, asegura que el código ya esta listo
   useEffect(() => {
-    const fetchProducts = async () => {
-      //Cargando datos
-      setLoading(true);
-      //No hay ningún error
-      setError(null);
-
-      try {
-        const response = await fetchData("GET", "/productos");
-        setProducts(response.data);
-        console.log(products);
-        //Ya cargó los datos
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        //No hay ningún error
-        setError(error);
-        console.log(error);
-      }
+    obtenerProductos();
       // setLoading(false);
-      if (error) {
-        return "Error: ${error.response.message}";
-      }
-    
-      if (loading === true) {
-        return "Loading...";
-      }
-    };
-   
-
-    fetchProducts();
-  }, []);
-
-  
-
+  }, [history]);
   return (
     <CatalogueContainer id='catalogo'>
       <div className='container-title'>
         <h2>Nuestro catálogo</h2>
       </div>
       <CatalogueGrid>
-        {products.map((product)=>{
+        {productos.map((product)=>{
           return(
-        <CardItem imagenProducto={product.imagenes.length > 0
+        <CardItem key={product.id} imagenProducto={product.imagenes.length > 0
           ? imageSrc + product.imagenes[0].nombreImagen
           : CamisaCore} nombreCamisa={product.nombre} id={product.id} />
-        )}) }
-        
-      
+        )}) }   
       </CatalogueGrid>
     </CatalogueContainer>
   );

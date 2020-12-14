@@ -10,7 +10,8 @@ import LogIn from "./components/LogIn/LogIn";
 import UserConfig from "./components/User/UserConfig";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Product from './components/Item/Product'
-
+import {ProductosState} from './context/Producto/ProductoState'
+import {UsuariosState} from './context/Usuarios/UsuariosState'
 import AddressView from "./components/Address/AddressView";
 import Address from './components/Address/Address'
 import User from './containers/User'
@@ -18,8 +19,10 @@ import User from './containers/User'
 function App() {
   const [open, setOpen] = useState(false);
   return (
-    <User.Provider>
+<ProductosState>
+  <UsuariosState>
     <>
+    
       <div>
         <Navbar open={open} setOpen={setOpen} />
         <RightNav open={open} setOpen={setOpen} />
@@ -55,8 +58,10 @@ function App() {
           </Switch>
         </Router>
       </div>
+      
     </>
-    </User.Provider>
+    </UsuariosState>
+    </ProductosState>
   );
 }
 

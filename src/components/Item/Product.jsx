@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useContext } from "react";
 import styled from "styled-components";
 import { Button, Modal, Form, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import BackgroundSpaceImg5 from "../../assets/background-space5.jpg";
 import CardItem from "../CardItem";
+import CamisaCore from "../../assets/clothes/Core.png";
 import Camisa1 from "../../assets/camisa1.png";
 import Ex1 from "../../assets/shirts/ex1.png";
 import Ex2 from "../../assets/shirts/ex2.png";
 import Ex3 from "../../assets/shirts/ex3.png";
 import GuiaTallas from "../../assets/tallas-guia.png";
+import Back from "../../assets/icon/back.svg";
+import { Link } from "react-router-dom";
+import useApi from '../../services/api'
+import constants from '../../constants/apiEndPoint'
+import {productosContext} from '../../context/Producto/ProductoState'
+const imageSrc = constants.apiEndPoint + "/public/img/";
+
 
 const ShoppingViewContainer = styled.div`
   background-image: url(${BackgroundSpaceImg5});
@@ -26,6 +34,11 @@ const ShoppingViewContainer = styled.div`
     color: #fff;
     background-color: #059584;
     border-color: #059584;
+  }
+  .back-icon-user-config {
+    width: 2rem;
+    margin-left:0;
+    
   }
 
   .shopping-view-grid {
@@ -271,25 +284,43 @@ const ShoppingViewContainer = styled.div`
   }
 `;
 
-function Product() {
+function Product({match}) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [value, setValue] = useState([1, 3]);
   const handleChange = (val) => setValue(val);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const fetchData = useApi();
+  const [product,setProduct]=useState({})
+  const {producto,obtenerProducto}=useContext(productosContext)
+
+  useEffect(() => {
+    const id=match.params.id
+    console.log(id)
+    obtenerProducto(id)    
+  }, [match])
+  console.log(product.imagenes);
   return (
+    <>
     <ShoppingViewContainer>
+    <Link to='/'>
+        <img src={Back} alt='back icon' className='back-icon-user-config'></img>
+      </Link>
       <div className='shopping-view-grid'>
         <div className='ex-tshirt-container'>
           <img src={Ex1} alt='Example 1'></img>
           <img src={Ex2} alt='Example 1'></img>
           <img src={Ex3} alt='Example 1'></img>
         </div>
-        <CardItem imagenProducto={Camisa1} nombreCamisa='Camisa 1' />
+        <CardItem imagenProducto={producto.imagenes
+          ? imageSrc + producto.imagenes[0].nombreImagen
+          : CamisaCore} nombreCamisa={producto.nombre} />
         <div className='inf-container'>
-          <h3>'Camisa1'</h3>
-          <p className='description-product'>'Ropa minimalista'</p>
-          <p className='price'>$ 369</p>
+          <h3>{product.nombre}</h3>
+          <p className='description-product'>{producto.descripcion}</p>
+          <p className='price'>$ {producto.precio}</p>
           <p className='description-product'>Talla:</p>
           <Button variant='light' onClick={handleShow}>
             GUÍA DE TALLAS
@@ -352,11 +383,12 @@ function Product() {
             </div>
 
             <Button variant='info' type='button'>
-              Añadir al cohete
+              Comprar Ahora
             </Button>
         </div>
       </div>
     </ShoppingViewContainer>
+    </>
   );
 }
 
