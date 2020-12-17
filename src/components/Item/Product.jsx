@@ -1,6 +1,6 @@
 import React, { useState,useEffect,useContext } from "react";
 import styled from "styled-components";
-import { Button, Modal, Form, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Button, Modal, Form, ToggleButtonGroup, ToggleButton,ButtonGroup } from "react-bootstrap";
 import BackgroundSpaceImg5 from "../../assets/background-space5.jpg";
 import CardItem from "../CardItem";
 import CamisaCore from "../../assets/clothes/Core.png";
@@ -14,6 +14,8 @@ import { Link } from "react-router-dom";
 import useApi from '../../services/api'
 import constants from '../../constants/apiEndPoint'
 import {productosContext} from '../../context/Producto/ProductoState'
+import Loader from '../Loader/Loader'
+import {carritoContext} from '../../context/Carrito/CarritoState'
 const imageSrc = constants.apiEndPoint + "/public/img/";
 
 
@@ -28,6 +30,7 @@ const ShoppingViewContainer = styled.div`
   height: auto; 
   color: #fff;
   padding-top:100px;
+  font-size: 28px;
  
 
   .btn-info {
@@ -38,7 +41,11 @@ const ShoppingViewContainer = styled.div`
   .back-icon-user-config {
     width: 2rem;
     margin-left:0;
-    
+  }
+  .form-control{
+    padding:25px;
+    margin:0 auto;
+    color:black;
   }
 
   .shopping-view-grid {
@@ -233,7 +240,7 @@ const ShoppingViewContainer = styled.div`
 
     .price {
       font-weight: 550;
-      font-size: 19px;
+      font-size: 30px;
       margin-bottom: 2px;
     }
 
@@ -284,26 +291,74 @@ const ShoppingViewContainer = styled.div`
   }
 `;
 
-function Product({match}) {
+function Product({match,history}) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [value, setValue] = useState([1, 3]);
   const handleChange = (val) => setValue(val);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const fetchData = useApi();
-  const [product,setProduct]=useState({})
-  const {producto,obtenerProducto}=useContext(productosContext)
+  const {producto,obtenerProducto,success,loading}=useContext(productosContext)
+  const[productoEnviar,setProductoAenviar]=useState({})
+  const[variant,setVariant]=useState(0)
+  const [cantidad,setCantidad]=useState(0)
+  const[stock,setStock]=useState([])
 
+  const {success:successCarro,carritoId,crearCarrrito, agregarItem}=useContext(carritoContext)
   useEffect(() => {
     const id=match.params.id
     console.log(id)
-    obtenerProducto(id)    
-  }, [match])
-  console.log(product.imagenes);
+    obtenerProducto(id) 
+  }, [success])
+
+  const agregarCarro=async (e)=>{
+    e.preventDefault()
+    if(cantidad<=0){
+      console.log('nmms no se puede')
+      return
+    }
+    await agregarItem({
+      productoId:producto.id,
+      varianteId:parseInt(variant),
+      cantidad:parseInt(cantidad)
+    })
+    
+      if(successCarro){
+        history.push(`/cohete-de-compra`)
+      }
+    
+  }
+  
+  const comprarDirecto=e=>{
+    e.preventDefault()
+    setProductoAenviar({
+      productoId:producto.id,
+      varianteId:1,
+      cantidad:cantidad
+    })
+    if(cantidad<=0){
+      console.log('nmms no se puede')
+      return
+    }
+    if(!carritoId){
+      crearCarrrito()
+    }
+    agregarItem(productoEnviar)
+    if(successCarro){
+      history.push('/cohete-de-compra')
+    }
+    
+  }
+  const variantHandler=e=>{
+    setVariant(e.target.value)
+    setStock(producto.variantes.filter(variante=>variante.id==e.target.value))
+    if(e.target.value!==variant){
+      setCantidad(0)
+    }
+   
+  }
   return (
     <>
+     {loading ?(<Loader/>):(
     <ShoppingViewContainer>
     <Link to='/'>
         <img src={Back} alt='back icon' className='back-icon-user-config'></img>
@@ -314,18 +369,30 @@ function Product({match}) {
           <img src={Ex2} alt='Example 1'></img>
           <img src={Ex3} alt='Example 1'></img>
         </div>
-        <CardItem imagenProducto={producto.imagenes
+        <CardItem imagenProducto={producto.imagenes.length>0
           ? imageSrc + producto.imagenes[0].nombreImagen
           : CamisaCore} nombreCamisa={producto.nombre} />
         <div className='inf-container'>
-          <h3>{product.nombre}</h3>
+          <h2>{producto.nombre}</h2>
           <p className='description-product'>{producto.descripcion}</p>
-          <p className='price'>$ {producto.precio}</p>
-          <p className='description-product'>Talla:</p>
+          <p className='price'>$ {producto.precio} MXN</p>
+          <p className='talla'>Talla:</p>
+          <div className='sizes'>
+            <ButtonGroup type='checkbox' >
+            {producto.variantes.length>0 ? producto.variantes.map((variante)=>
+              <Button value={variante.id} onClick={variantHandler}
+              disabled={variante.stock>0?false:true} >{variante.talla}</Button>):
+              <p className='description-product'>Sin Tallas disponibles :C</p> }
+            </ButtonGroup>
+            {/* <button>CH</button>
+            <button>M</button>
+            <button>G</button>
+            <button>EG</button> */}
+          </div>
           <Button variant='light' onClick={handleShow}>
             GUÍA DE TALLAS
           </Button>
-
+          
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
               <Modal.Title>Guía de tallas</Modal.Title>
@@ -339,34 +406,20 @@ function Product({match}) {
               </Button>
             </Modal.Footer>
           </Modal>
-
           <div className='grid-size-amount'>
-            <p>Cantidad: </p>
+            <p>Cantidad:{cantidad} </p>
             <Form>
               <Form.Group controlId='exampleForm.ControlSelect1'>
-                <Form.Control as='select'>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                <Form.Control as='select' value={cantidad}  onChange={(e)=>setCantidad(e.target.value)} >
+                {stock.length>0 && [...Array(stock[0].stock ).keys()].map((x)=>(
+                  <option key={x+1} value={x+1}>{x+1}</option>
+                                    ))}
                 </Form.Control>
               </Form.Group>
             </Form>
             <p>unidades</p>
           </div>
-          <div className='sizes'>
-            <ToggleButtonGroup type='checkbox' value={value} onChange={handleChange}>
-              <ToggleButton value={1}>CH</ToggleButton>
-              <ToggleButton value={2}>M</ToggleButton>
-              <ToggleButton value={3}>G</ToggleButton>
-              <ToggleButton value={4}>EG</ToggleButton>
-            </ToggleButtonGroup>
-            {/* <button>CH</button>
-            <button>M</button>
-            <button>G</button>
-            <button>EG</button> */}
-          </div>
+         
           {/*productos ? (
             <Button variant='info' type='button' onClick={() => seleccionarProducto(id)}>
               Añadir al cohete
@@ -377,17 +430,18 @@ function Product({match}) {
             </Button>
           )*/}
           <div className="btn-cohete">
-          <Button variant='info' type='button'>
+          <Button variant='info' type='button' onClick={agregarCarro}>
               Añadir al cohete
             </Button>
             </div>
 
-            <Button variant='info' type='button'>
+            <Button variant='info' type='button' onClick={comprarDirecto}>
               Comprar Ahora
             </Button>
         </div>
       </div>
     </ShoppingViewContainer>
+    )}
     </>
   );
 }

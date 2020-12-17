@@ -1,4 +1,4 @@
-import{OBTENER_PRODUCTOS,OBTENER_PRODUCTO} from '../types'
+import{OBTENER_PRODUCTOS,OBTENER_PRODUCTO,REQUEST} from '../types'
 
 export default(state,action)=>{
 
@@ -6,14 +6,23 @@ export default(state,action)=>{
         case OBTENER_PRODUCTOS:
             return{
                 ...state,
-                productos:action.payload
+                productos:action.payload,
+                success:true,
+                loading:false
             }
         case OBTENER_PRODUCTO:
             return{
                 ...state,
-                producto:action.payload
+                producto:action.payload,
+                success:true,
+                loading:false
             }
-        
+        case REQUEST:
+        return{
+           ...state,
+           success:false,
+           loading:true,
+        }
         default:
             return state;
     }

@@ -13,7 +13,10 @@ const initialState={
     apellido:'',
     autenticado:false,
     error:null,
-    loading:true
+    loading:true,
+    direccionDefault:{},
+    direcciones:[],
+    direccionSelec:{},
 }
 export const usuarioContext=createContext(initialState)
 
@@ -57,7 +60,7 @@ export const UsuariosState=({children})=>{
     }
     async function ObtenerUsuario(id){
         try {
-            const response = await fetchData("GET", `/minoristas/${id}`);
+            const response = await fetchData("GET",`/minoristas/${id}`);
             //setProducts(response.data);
             //Ya cargó los datos
             console.log(response)
@@ -73,7 +76,7 @@ export const UsuariosState=({children})=>{
     }
     async function ObtenerDefault(id){
         try {
-            const nombres = await fetchData("GET", `/minoristas/${id}/direccionDefault`);
+            const nombres = await fetchData("GET",`/minoristas/${id}/direccionDefault`);
             //setProducts(response.data);
             //Ya cargó los datos
             console.log(nombres.data[0])
@@ -82,6 +85,7 @@ export const UsuariosState=({children})=>{
                 payload:{
                     nombre:nombres.data[0].nombre,
                     apellido:nombres.data[0].apellidos,
+
                 }
             })
           } catch (error) {
@@ -90,8 +94,22 @@ export const UsuariosState=({children})=>{
           }
 
     }
-    async function modificarCorreo(correo){
-
+    async function modificarCorreo(correo,id){
+      try {
+        const nombres = await fetchData("PUT", `/minoristas/${id}/direccionDefault`);
+        //setProducts(response.data);
+        //Ya cargó los datos
+        console.log(nombres.data[0])
+        dispatch({
+            type:OBTENER_USUARIO_DEFAULT,
+            payload:{
+                nombre:nombres.data[0].nombre,
+                apellido:nombres.data[0].apellidos,
+            }
+        })
+      } catch (error) {
+        console.log(error);
+      }
     }
     async function modificarContraseña(data ){
 
@@ -106,6 +124,9 @@ export const UsuariosState=({children})=>{
             token:state.token,
             autenticado:state.autenticado,
             error:state.error,
+            direccionDefault:state.direccionDefault,
+            direcciones:state.direcciones,
+            direccionSelec:state.direccionSelec,
             Login,
             LogOut,
             ObtenerDefault,

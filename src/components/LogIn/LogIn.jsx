@@ -76,18 +76,18 @@ const WhiteContainer = styled.div`
   }
 `;
 
-function LogIn({history}) {
+function LogIn({history,location}) {
   const{token,autenticado,Login,error}=useContext(usuarioContext)
   const [usuario, setUsuario] = useState({
   correo:'',
   contrasena:''
   });
   const {correo,contrasena}=usuario;
-
+  const redirect=location.search ? location.search.split('=')[1]: '/'
   //ComponentDidMount = Cuando la pagina cargue, asegura que el código ya esta listo
   useEffect(() => {
-     if(token)history.push('/')
-  }, [token]);
+     if(token)history.push(redirect)
+  }, [token,redirect,history]);
 
   
   const onChangeHandler=e=>{
@@ -95,11 +95,9 @@ function LogIn({history}) {
        ...usuario,
        [e.target.name]:e.target.value
      })
-     console.log(usuario)
   }
   const onSubmitHandler=e=>{
    e.preventDefault();
-   console.log(usuario)
   Login(usuario)
  
   }

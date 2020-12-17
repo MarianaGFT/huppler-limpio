@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext,useEffect} from "react";
 import styled from "styled-components";
 import BackgroundSpaceImg5 from "../../assets/background-space5.jpg";
 import Map from "../../assets/icon/map-pin.png";
@@ -9,6 +9,7 @@ import MasterCard from "../../assets/MasterCard.png";
 import AmericanExpress from "../../assets/AmericanExpress.png";
 import Paypal from "../../assets/Paypal.png";
 import Oxxo from "../../assets/Oxxo.png";
+import {usuarioContext} from '../../context/Usuarios/UsuariosState'
 
 const CheckoutContainer = styled.div`
   background-image: url(${BackgroundSpaceImg5});
@@ -102,7 +103,13 @@ const WhiteContainer = styled.div`
   }
 `;
 
-function Checkout() {
+function Checkout({history}) {
+  const {token}=useContext(usuarioContext)
+  useEffect(() => {
+    if(!token){
+      history.push('/login')
+    }
+  }, [history,token])
   return (
     <CheckoutContainer>
       <div className='container-title'>
@@ -114,7 +121,7 @@ function Checkout() {
           <p>
             <b>C.P. 28973</b> <br></br> Cristobal Colón 750 - Villa de Álvarez - Colima - Mex
             <br></br>Yerania Rivera - 3121541417 <br></br>
-            <a href='#'>Editar o elegir otro</a>
+            <a href='/adresses'>Editar o elegir otro</a>
           </p>
         </div>
         <div className='car-items'></div>

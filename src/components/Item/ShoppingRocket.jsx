@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext,useEffect} from "react";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
 import BackgroundSpaceImg5 from "../../assets/background-space5.jpg";
@@ -6,6 +6,10 @@ import Camisa1 from "../../assets/camisa1.png";
 import Camisa2 from "../../assets/camisa2.png";
 import Camisa3 from "../../assets/camisa3.png";
 import Camisa6 from "../../assets/camisa6.png";
+import constants from '../../constants/apiEndPoint'
+import {carritoContext} from '../../context/Carrito/CarritoState'
+import Loader from '../Loader/Loader'
+import {Link} from 'react-router-dom'
 
 const ShoppingRocketContainer = styled.div`
   background-image: url(${BackgroundSpaceImg5});
@@ -136,55 +140,37 @@ const ItemPurchaseDiv = styled.div`
   }
 `;
 
-function ShoppingRocket({history}) {
-  return (
+function ShoppingRocket({history,match}) {
+  const {articulos,success,loading,obtenerCarrito,carritoId}=useContext(carritoContext)
+  const imageSrc = constants.apiEndPoint + "/public/img/";
+
+  useEffect(() => {
+    obtenerCarrito(carritoId)  
+  }, [history])
+  return (<>
+  {loading?(<Loader/>):(
     <ShoppingRocketContainer>
-      <h3>Tu cohete de compra</h3>
+    <h3>Tu cohete de compra</h3>
+    {articulos&&articulos.map(articulo=>
       <ItemPurchaseDiv>
-        <div className='grid-shopping-rocket'>
-          <img src={Camisa1} alt='camisa1'></img>
-          <p>x1</p>
-          <p>M</p>
-          <p>$399</p>
+       <div className='grid-shopping-rocket'>
+        <Link to={`/productos/${articulo.productoId}`}>
+        <img src={imageSrc + articulo.imagen} alt='camisa1'></img>
+        </Link>
+        <p>X{articulo.cantidad}</p>
+        <p>{articulo.talla}</p>
+        <p>$ {articulo.cantidad * articulo.precio}</p>
         </div>
       </ItemPurchaseDiv>
-      <ItemPurchaseDiv>
-        <div className='grid-shopping-rocket'>
-          <img src={Camisa1} alt='camisa1'></img>
-          <p>x1</p>
-          <p>M</p>
-          <p>$399</p>
-        </div>
-      </ItemPurchaseDiv>
-      <ItemPurchaseDiv>
-        <div className='grid-shopping-rocket'>
-          <img src={Camisa2} alt='camisa1'></img>
-          <p>x2</p>
-          <p>M</p>
-          <p>$799</p>
-        </div>
-      </ItemPurchaseDiv>
-      <ItemPurchaseDiv>
-        <div className='grid-shopping-rocket'>
-          <img src={Camisa6} alt='camisa1'></img>
-          <p>x1</p>
-          <p>M</p>
-          <p>$899</p>
-        </div>
-      </ItemPurchaseDiv>
-      <ItemPurchaseDiv>
-        <div className='grid-shopping-rocket'>
-          <img src={Camisa3} alt='camisa1'></img>
-          <p>x4</p>
-          <p>M</p>
-          <p>$399</p>
-        </div>
-      </ItemPurchaseDiv>
-      <div>
-        <Button variant='info' onClick={()=>history.push('/')}>Seguir comprando</Button>
-        <Button variant='info'>Finalizar compra</Button>
-      </div>
-    </ShoppingRocketContainer>
+      )}
+    <div>
+      <Button variant='info' onClick={()=>history.push('/')}>Seguir comprando</Button>
+      <Button variant='info' onClick={()=>history.push('/login?redirect=checkout')}>Finalizar compra</Button>
+    </div>
+  </ShoppingRocketContainer>
+  )}
+    
+    </> 
   );
 }
 

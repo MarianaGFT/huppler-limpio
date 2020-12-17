@@ -2,11 +2,13 @@ import React,{useReducer,createContext} from 'react'
 import ProductosReducer from './ProductosReducer'
 import constants from '../../constants/apiEndPoint'
 import useApi from "../../services/api";
-import{OBTENER_PRODUCTO,OBTENER_PRODUCTOS} from '../types'
+import{OBTENER_PRODUCTO,OBTENER_PRODUCTOS,REQUEST} from '../types'
 
 const initialState={
     productos:[],
-    producto:{}
+    producto:{},
+    success:false,
+    loading:true
 }
 export const productosContext=createContext(initialState)
 
@@ -15,6 +17,9 @@ export const ProductosState=({children})=>{
     const [state,dispatch]=useReducer(ProductosReducer,initialState)
 
     async function obtenerProductos(){
+        dispatch({
+            type:REQUEST
+        })
         try {
             const response = await fetchData("GET", "/productos");
             console.log(response.data);
@@ -45,6 +50,8 @@ export const ProductosState=({children})=>{
         value={{
             producto:state.producto,
             productos:state.productos,
+            success:state.success,
+            loading:state.loading,
             obtenerProducto,
             obtenerProductos
         }}

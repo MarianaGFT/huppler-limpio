@@ -10,7 +10,6 @@ const CardContainer = styled.div`
     text-align: center;
     border-radius: 10px;
     background-color: #1f8bac51;
-    width: 145px;
     height: 190px;
     /* width: 85%;
     height: 107%; */
@@ -18,7 +17,7 @@ const CardContainer = styled.div`
 
   span img {
     /* width: 150px; */
-    width: 80%;
+    width: 100%;
     margin-top: 5px;
   }
 
@@ -69,19 +68,19 @@ const CardContainer = styled.div`
   /************ 1024 ************/
   @media screen and (min-width: 1024px) {
     span {
-      width: 190px;
-      height: 260px;
-      margin-left:70px
+      width: 300px;
+      height: 350px;
+      margin-left:150px
     }
 
     span img {
-      margin-top: 15px;
-      width: 185px;
+      margin-top: 25px;
+      width: 255px;
     }
 
     span h3 {
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 28px;
     }
   }
 `;

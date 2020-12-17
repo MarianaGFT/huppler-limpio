@@ -178,8 +178,6 @@ function UserConfig({history}) {
   const {correo,contrasenaActual,contrasenaNueva,correoActual}=usuario2;
   const usuarioToken= jwt_decode(token);
   useEffect(() => {
-    if(!token)history.push('/')
-    axios.defaults.headers.common['Authorization']=token;
     ObtenerUsuario(usuarioToken.user.id)
     ObtenerDefault(usuarioToken.user.id)
     setUsuario({

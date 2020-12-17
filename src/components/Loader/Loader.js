@@ -10,8 +10,7 @@ export default function Loader() {
         sizeUnit={'px'}
         size={20}
         margin='20px'
-        color={'#000000'}
-        loading={true}
+        color={'white'}
       />
       <h4>Cargando</h4>
     </div>

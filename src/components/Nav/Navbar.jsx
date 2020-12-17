@@ -10,6 +10,7 @@ import Rocket from "../../assets/icon/rocket.png";
 import {Link} from 'react-router-dom'
 import {Dropdown,DropdownButton} from 'react-bootstrap'
 import {usuarioContext} from '../../context/Usuarios/UsuariosState'
+import {carritoContext} from '../../context/Carrito/CarritoState'
 const Nav = styled.nav`
   width: 100%;
   height: 60px;
@@ -144,7 +145,9 @@ const Nav = styled.nav`
 `;
 
 const Navbar = ({ open, setOpen }) => {
+  const [id,setId]=useState('')
   const {token,LogOut}=useContext(usuarioContext)
+  const{carritoId}=useContext(carritoContext)
  
 
   var prevScrollpos = window.pageYOffset;
@@ -157,9 +160,10 @@ const Navbar = ({ open, setOpen }) => {
     }
     prevScrollpos = currentScrollPos;
   };
-  const userHandler=e=>{
-  
-  }
+  useEffect(() => {
+    setId(carritoId)
+    console.log(id)
+  }, [carritoId])
   return (
       <Nav id='navbar'>
         <Burger open={open} setOpen={setOpen} />
@@ -192,16 +196,16 @@ const Navbar = ({ open, setOpen }) => {
             
         ):(
         <DropdownButton id="dropdown-basic-button" title="User">
-        <Dropdown.Item href="#/action-1" onClick={userHandler} 
-        ><a href='/user'>Ajustes de usuario</a></Dropdown.Item>
+        <Dropdown.Item href="/user"  
+        >Ajustes de usuario</Dropdown.Item>
         <Dropdown.Item href="#/action-2" onClick={()=>LogOut()} >Cerrar Sesion</Dropdown.Item>
       </DropdownButton>
         )
         } 
         <button>
-          <a href='/cohete-de-compra'>
+        <a href="/cohete-de-compra/">
             <img src={Rocket} alt='shirt' title='Cohete' className='icons-navbar cohete'></img>
-          </a>
+        </a>
         </button>
         
       </Nav>
