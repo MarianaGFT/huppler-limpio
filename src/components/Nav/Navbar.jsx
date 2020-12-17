@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import Burger from "./Burger";
 import Home from "../../assets/icon/home.png";
@@ -7,9 +7,9 @@ import Help from "../../assets/icon/help.png";
 import Contact from "../../assets/icon/contact.png";
 import Logo from "../../assets/icon/Logo-huppler.png";
 import Rocket from "../../assets/icon/rocket.png";
-import {Link} from 'react-router-dom'
-import {Dropdown,DropdownButton} from 'react-bootstrap'
-import {usuarioContext} from '../../context/Usuarios/UsuariosState'
+import { Link } from "react-router-dom";
+import { Dropdown, DropdownButton } from "react-bootstrap";
+import { usuarioContext } from "../../context/Usuarios/UsuariosState";
 const Nav = styled.nav`
   width: 100%;
   height: 60px;
@@ -18,6 +18,8 @@ const Nav = styled.nav`
   position: fixed;
   z-index: 4;
   overflow-x: none;
+  display: flex;
+  align-items: center;
 
   .logo-huppler,
   .icons-navbar,
@@ -34,13 +36,11 @@ const Nav = styled.nav`
   .rocket-container img {
     width: 35px;
   }
-  .cohete-sesion{
-    color:white
+  .cohete-sesion {
+    margin: 0 !important;
+    color: white;
   }
 
-  .coehete{
-    margin-left:0;
-  }
   /************ 480 ************/
   @media screen and (min-width: 480px) {
     background-color: #262626;
@@ -52,7 +52,7 @@ const Nav = styled.nav`
       position: absolute;
       left: 0;
       width: 70px;
-      padding-top: 6px;
+      /* padding-top: 6px; */
     }
 
     .icons-navbar {
@@ -68,7 +68,7 @@ const Nav = styled.nav`
     button {
       border-radius: 10px;
       width: 75px;
-      margin: 5px 0px;
+      margin: 0;
       display: block;
       background-color: transparent;
       border: transparent;
@@ -84,6 +84,12 @@ const Nav = styled.nav`
     button:active {
       border-bottom: 4px solid #059aee;
     }
+
+    .rocket-position {
+      position: absolute;
+      top: 7px;
+      right: 18px;
+    }
   }
 
   /************ 768 ************/
@@ -97,7 +103,7 @@ const Nav = styled.nav`
     transition: top 0.3s; */
 
     button {
-      margin: 5px 25px;
+      margin: 0 25px;
     }
   }
 
@@ -144,8 +150,7 @@ const Nav = styled.nav`
 `;
 
 const Navbar = ({ open, setOpen }) => {
-  const {token,LogOut}=useContext(usuarioContext)
- 
+  const { token, LogOut } = useContext(usuarioContext);
 
   var prevScrollpos = window.pageYOffset;
   window.onscroll = function () {
@@ -157,54 +162,53 @@ const Navbar = ({ open, setOpen }) => {
     }
     prevScrollpos = currentScrollPos;
   };
-  const userHandler=e=>{
-  
-  }
+  const userHandler = (e) => {};
   return (
-      <Nav id='navbar'>
-        <Burger open={open} setOpen={setOpen} />
-        <img src={Logo} alt='Logo huppler' className='logo-huppler'></img>
+    <Nav id='navbar'>
+      <Burger open={open} setOpen={setOpen} />
+      <img src={Logo} alt='Logo huppler' className='logo-huppler'></img>
+      <button>
+        <a href='#inicio'>
+          <img src={Home} alt='home' title='Inicio' className='icons-navbar'></img>
+        </a>
+      </button>
+      <button>
+        <a href='#catalogo'>
+          <img src={Shirt} alt='shirt' title='Catalogo' className='icons-navbar'></img>
+        </a>
+      </button>
+      <button>
+        <a href='#faqs'>
+          <img src={Help} alt='help' title='Ayuda' className='icons-navbar'></img>
+        </a>
+      </button>
+      <button>
+        <a href='#contacto'>
+          <img src={Contact} alt='shirt' title='Contacto' className='icons-navbar'></img>
+        </a>
+      </button>
+      {!token ? (
         <button>
-          <a href='#inicio'>
-            <img src={Home} alt='home' title='Inicio' className='icons-navbar'></img>
+          <a href='/login'>
+            <p className='cohete-sesion'>Iniciar Sesion</p>
           </a>
         </button>
-        <button>
-          <a href='#catalogo'>
-            <img src={Shirt} alt='shirt' title='Catalogo' className='icons-navbar'></img>
-          </a>
-        </button>
-        <button>
-          <a href='#faqs'>
-            <img src={Help} alt='help' title='Ayuda' className='icons-navbar'></img>
-          </a>
-        </button>
-        <button>
-          <a href='#contacto'>
-            <img src={Contact} alt='shirt' title='Contacto' className='icons-navbar'></img>
-          </a>
-        </button>
-        {!token ?(
-          
-            <a href='/login'>
-              <p className='cohete-sesion'>Iniciar Sesion</p>
-            </a> 
-            
-        ):(
-        <DropdownButton id="dropdown-basic-button" title="User">
-        <Dropdown.Item href="#/action-1" onClick={userHandler} 
-        ><a href='/user'>Ajustes de usuario</a></Dropdown.Item>
-        <Dropdown.Item href="#/action-2" onClick={()=>LogOut()} >Cerrar Sesion</Dropdown.Item>
-      </DropdownButton>
-        )
-        } 
-        <button>
-          <a href='/cohete-de-compra'>
-            <img src={Rocket} alt='shirt' title='Cohete' className='icons-navbar cohete'></img>
-          </a>
-        </button>
-        
-      </Nav>
+      ) : (
+        <DropdownButton id='dropdown-basic-button' title='User'>
+          <Dropdown.Item href='#/action-1' onClick={userHandler}>
+            <a href='/user'>Ajustes de usuario</a>
+          </Dropdown.Item>
+          <Dropdown.Item href='#/action-2' onClick={() => LogOut()}>
+            Cerrar Sesion
+          </Dropdown.Item>
+        </DropdownButton>
+      )}
+      <button className='rocket-position'>
+        <a href='/cohete-de-compra'>
+          <img src={Rocket} alt='shirt' title='Cohete' className='icons-navbar '></img>
+        </a>
+      </button>
+    </Nav>
   );
 };
 

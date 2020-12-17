@@ -1,8 +1,9 @@
-import React, { useState,useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Button, Modal, Form, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import BackgroundSpaceImg5 from "../../assets/background-space5.jpg";
 import CardItem from "../CardItem";
+import Add from "../../assets/icon/add.png";
 import CamisaCore from "../../assets/clothes/Core.png";
 import Camisa1 from "../../assets/camisa1.png";
 import Ex1 from "../../assets/shirts/ex1.png";
@@ -11,11 +12,10 @@ import Ex3 from "../../assets/shirts/ex3.png";
 import GuiaTallas from "../../assets/tallas-guia.png";
 import Back from "../../assets/icon/back.svg";
 import { Link } from "react-router-dom";
-import useApi from '../../services/api'
-import constants from '../../constants/apiEndPoint'
-import {productosContext} from '../../context/Producto/ProductoState'
+import useApi from "../../services/api";
+import constants from "../../constants/apiEndPoint";
+import { productosContext } from "../../context/Producto/ProductoState";
 const imageSrc = constants.apiEndPoint + "/public/img/";
-
 
 const ShoppingViewContainer = styled.div`
   background-image: url(${BackgroundSpaceImg5});
@@ -25,10 +25,9 @@ const ShoppingViewContainer = styled.div`
   background-size: cover;
   background-color: #464646;
   width: 100%;
-  height: auto; 
+  height: auto;
   color: #fff;
-  padding-top:100px;
- 
+  padding-top: 100px;
 
   .btn-info {
     color: #fff;
@@ -37,8 +36,7 @@ const ShoppingViewContainer = styled.div`
   }
   .back-icon-user-config {
     width: 2rem;
-    margin-left:0;
-    
+    margin-left: 0;
   }
 
   .shopping-view-grid {
@@ -49,12 +47,11 @@ const ShoppingViewContainer = styled.div`
     grid-template-columns: repeat(1, 50%);
     justify-content: center;
     height: auto;
-    
   }
 
   .inf-container {
     text-align: -webkit-left;
-    margin-left:200px;
+    margin-left: 200px;
   }
 
   /* RADIOBUTTON ELEGIR TALLA */
@@ -82,8 +79,8 @@ const ShoppingViewContainer = styled.div`
     color: #000;
     font-weight: 600;
   }
-  .btn-cohete{
-    margin-bottom:10px
+  .btn-cohete {
+    margin-bottom: 10px;
   }
 
   /*BOTON MODAL TALLAS*/
@@ -284,7 +281,7 @@ const ShoppingViewContainer = styled.div`
   }
 `;
 
-function Product({match}) {
+function Product({ match }) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -293,81 +290,84 @@ function Product({match}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const fetchData = useApi();
-  const [product,setProduct]=useState({})
-  const {producto,obtenerProducto}=useContext(productosContext)
+  const [product, setProduct] = useState({});
+  const { producto, obtenerProducto } = useContext(productosContext);
 
   useEffect(() => {
-    const id=match.params.id
-    console.log(id)
-    obtenerProducto(id)    
-  }, [match])
+    const id = match.params.id;
+    console.log(id);
+    obtenerProducto(id);
+  }, [match]);
   console.log(product.imagenes);
   return (
     <>
-    <ShoppingViewContainer>
-    <Link to='/'>
-        <img src={Back} alt='back icon' className='back-icon-user-config'></img>
-      </Link>
-      <div className='shopping-view-grid'>
-        <div className='ex-tshirt-container'>
-          <img src={Ex1} alt='Example 1'></img>
-          <img src={Ex2} alt='Example 1'></img>
-          <img src={Ex3} alt='Example 1'></img>
-        </div>
-        <CardItem imagenProducto={producto.imagenes
-          ? imageSrc + producto.imagenes[0].nombreImagen
-          : CamisaCore} nombreCamisa={producto.nombre} />
-        <div className='inf-container'>
-          <h3>{product.nombre}</h3>
-          <p className='description-product'>{producto.descripcion}</p>
-          <p className='price'>$ {producto.precio}</p>
-          <p className='description-product'>Talla:</p>
-          <Button variant='light' onClick={handleShow}>
-            GUÍA DE TALLAS
-          </Button>
-
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Guía de tallas</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <img src={GuiaTallas} alt='Guía de tallas' className='guia-tallas'></img>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant='secondary' onClick={handleClose}>
-                Cerrar
-              </Button>
-            </Modal.Footer>
-          </Modal>
-
-          <div className='grid-size-amount'>
-            <p>Cantidad: </p>
-            <Form>
-              <Form.Group controlId='exampleForm.ControlSelect1'>
-                <Form.Control as='select'>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Form.Control>
-              </Form.Group>
-            </Form>
-            <p>unidades</p>
+      <ShoppingViewContainer>
+        <Link to='/'>
+          <img src={Back} alt='back icon' className='back-icon-user-config'></img>
+        </Link>
+        <div className='shopping-view-grid'>
+          <div className='ex-tshirt-container'>
+            <img src={Ex1} alt='Example 1'></img>
+            <img src={Ex2} alt='Example 1'></img>
+            <img src={Ex3} alt='Example 1'></img>
           </div>
-          <div className='sizes'>
-            <ToggleButtonGroup type='checkbox' value={value} onChange={handleChange}>
-              <ToggleButton value={1}>CH</ToggleButton>
-              <ToggleButton value={2}>M</ToggleButton>
-              <ToggleButton value={3}>G</ToggleButton>
-              <ToggleButton value={4}>EG</ToggleButton>
-            </ToggleButtonGroup>
-            {/* <button>CH</button>
+          <CardItem
+            imagenProducto={
+              producto.imagenes ? imageSrc + producto.imagenes[0].nombreImagen : CamisaCore
+            }
+            nombreCamisa={producto.nombre}
+          />
+          <div className='inf-container'>
+            <h3>{product.nombre}</h3>
+            <p className='description-product'>{producto.descripcion}</p>
+            <p className='price'>$ {producto.precio}</p>
+            <p className='description-product'>Talla:</p>
+            <Button variant='light' onClick={handleShow}>
+              GUÍA DE TALLAS
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Guía de tallas</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <img src={GuiaTallas} alt='Guía de tallas' className='guia-tallas'></img>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant='secondary' onClick={handleClose}>
+                  Cerrar
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
+            <div className='grid-size-amount'>
+              <p>Cantidad: </p>
+              <Form>
+                <Form.Group controlId='exampleForm.ControlSelect1'>
+                  <Form.Control as='select'>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+              <p>unidades</p>
+            </div>
+            <div className='sizes'>
+              <ToggleButtonGroup type='checkbox' value={value} onChange={handleChange}>
+                <ToggleButton value={1}>CH</ToggleButton>
+                <ToggleButton value={2}>M</ToggleButton>
+                <ToggleButton value={3}>G</ToggleButton>
+                <ToggleButton value={4}>EG</ToggleButton>
+              </ToggleButtonGroup>
+              {/* <button>CH</button>
             <button>M</button>
             <button>G</button>
             <button>EG</button> */}
-          </div>
-          {/*productos ? (
+            </div>
+            {/*productos ? (
             <Button variant='info' type='button' onClick={() => seleccionarProducto(id)}>
               Añadir al cohete
             </Button>
@@ -376,18 +376,18 @@ function Product({match}) {
               Eliminar
             </Button>
           )*/}
-          <div className="btn-cohete">
-          <Button variant='info' type='button'>
-              Añadir al cohete
-            </Button>
+            <div className='btn-cohete'>
+              <Button variant='info' type='button'>
+                <img src={Add} alt='add icon'></img> Añadir al cohete
+              </Button>
             </div>
 
             <Button variant='info' type='button'>
               Comprar Ahora
             </Button>
+          </div>
         </div>
-      </div>
-    </ShoppingViewContainer>
+      </ShoppingViewContainer>
     </>
   );
 }
