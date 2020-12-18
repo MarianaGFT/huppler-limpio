@@ -1,11 +1,9 @@
-import React,{useState,useEffect,useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { Form, Button,Alert } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import BackgroundSpaceImg7 from "../../assets/background-space7.png";
 import Logo from "../../assets/logo-huppler.png";
-import {usuarioContext} from '../../context/Usuarios/UsuariosState'
-
-
+import { usuarioContext } from "../../context/Usuarios/UsuariosState";
 
 const LoginContainer = styled.div`
   background-image: url(${BackgroundSpaceImg7});
@@ -15,7 +13,7 @@ const LoginContainer = styled.div`
   background-size: cover;
   background-color: #464646;
   width: 100%;
-  height: auto;
+  height: 100vh;
   text-align: center;
   padding: 1rem 0;
 
@@ -38,9 +36,9 @@ const WhiteContainer = styled.div`
   .form-control {
     width: 90%;
     margin: 0 auto;
-    height:40px;
-    color:black;
-    background-color:lightgray
+    height: 40px;
+    color: black;
+    background-color: lightgray;
   }
 
   .text-muted {
@@ -79,8 +77,8 @@ const WhiteContainer = styled.div`
 function LogIn({history,location}) {
   const{token,autenticado,Login,error}=useContext(usuarioContext)
   const [usuario, setUsuario] = useState({
-  correo:'',
-  contrasena:''
+    correo: "",
+    contrasena: "",
   });
   const {correo,contrasena}=usuario;
   const redirect=location.search ? location.search.split('=')[1]: '/'
@@ -107,29 +105,32 @@ function LogIn({history,location}) {
       <img src={Logo} alt='Logo huppler'></img>
       <WhiteContainer>
         <p>INICIAR SESIÓN</p>
-        {error?<Alert variant='danger'>{error}</Alert>:null}
+        {error ? <Alert variant='danger'>{error}</Alert> : null}
         <Form onSubmit={onSubmitHandler}>
           <Form.Group controlId='formBasicEmail'>
-            <Form.Control type='email' 
-            placeholder='Correo Electrónico'
-            name='correo'
-            value={correo}
-            onChange={onChangeHandler} />
+            <Form.Control
+              type='email'
+              placeholder='Correo Electrónico'
+              name='correo'
+              value={correo}
+              onChange={onChangeHandler}
+            />
           </Form.Group>
 
           <Form.Group controlId='formBasicPassword'>
-            <Form.Control type='password' 
-            placeholder='Contraseña' 
-            name='contrasena'
-            value={contrasena}
-            onChange={onChangeHandler} />
+            <Form.Control
+              type='password'
+              placeholder='Contraseña'
+              name='contrasena'
+              value={contrasena}
+              onChange={onChangeHandler}
+            />
           </Form.Group>
           <Form.Text className='text-muted'>¿Olvidaste tu contraseña?</Form.Text>
           <Button variant='primary' type='submit'>
             ACCEDER
           </Button>
         </Form>
-        
       </WhiteContainer>
     </LoginContainer>
   );

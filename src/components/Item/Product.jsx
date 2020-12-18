@@ -1,8 +1,9 @@
-import React, { useState,useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Button, Modal, Form, ToggleButtonGroup, ToggleButton,ButtonGroup } from "react-bootstrap";
 import BackgroundSpaceImg5 from "../../assets/background-space5.jpg";
 import CardItem from "../CardItem";
+import Add from "../../assets/icon/add.png";
 import CamisaCore from "../../assets/clothes/Core.png";
 import Camisa1 from "../../assets/camisa1.png";
 import Ex1 from "../../assets/shirts/ex1.png";
@@ -18,7 +19,6 @@ import Loader from '../Loader/Loader'
 import {carritoContext} from '../../context/Carrito/CarritoState'
 const imageSrc = constants.apiEndPoint + "/public/img/";
 
-
 const ShoppingViewContainer = styled.div`
   background-image: url(${BackgroundSpaceImg5});
   background-position: center center;
@@ -27,7 +27,7 @@ const ShoppingViewContainer = styled.div`
   background-size: cover;
   background-color: #464646;
   width: 100%;
-  height: auto; 
+  height: auto;
   color: #fff;
   padding-top:100px;
   font-size: 28px;
@@ -56,12 +56,11 @@ const ShoppingViewContainer = styled.div`
     grid-template-columns: repeat(1, 50%);
     justify-content: center;
     height: auto;
-    
   }
 
   .inf-container {
     text-align: -webkit-left;
-    margin-left:200px;
+    margin-left: 200px;
   }
 
   /* RADIOBUTTON ELEGIR TALLA */
@@ -89,8 +88,8 @@ const ShoppingViewContainer = styled.div`
     color: #000;
     font-weight: 600;
   }
-  .btn-cohete{
-    margin-bottom:10px
+  .btn-cohete {
+    margin-bottom: 10px;
   }
 
   /*BOTON MODAL TALLAS*/
@@ -438,8 +437,9 @@ function Product({match,history}) {
             <Button variant='info' type='button' onClick={comprarDirecto}>
               Comprar Ahora
             </Button>
+          </div>
         </div>
-      </div>
+      
     </ShoppingViewContainer>
     )}
     </>

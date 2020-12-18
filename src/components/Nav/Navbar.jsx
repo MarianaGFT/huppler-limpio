@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import Burger from "./Burger";
 import Home from "../../assets/icon/home.png";
@@ -19,6 +19,8 @@ const Nav = styled.nav`
   position: fixed;
   z-index: 4;
   overflow-x: none;
+  display: flex;
+  align-items: center;
 
   .logo-huppler,
   .icons-navbar,
@@ -35,13 +37,11 @@ const Nav = styled.nav`
   .rocket-container img {
     width: 35px;
   }
-  .cohete-sesion{
-    color:white
+  .cohete-sesion {
+    margin: 0 !important;
+    color: white;
   }
 
-  .coehete{
-    margin-left:0;
-  }
   /************ 480 ************/
   @media screen and (min-width: 480px) {
     background-color: #262626;
@@ -53,7 +53,7 @@ const Nav = styled.nav`
       position: absolute;
       left: 0;
       width: 70px;
-      padding-top: 6px;
+      /* padding-top: 6px; */
     }
 
     .icons-navbar {
@@ -69,7 +69,7 @@ const Nav = styled.nav`
     button {
       border-radius: 10px;
       width: 75px;
-      margin: 5px 0px;
+      margin: 0;
       display: block;
       background-color: transparent;
       border: transparent;
@@ -85,6 +85,12 @@ const Nav = styled.nav`
     button:active {
       border-bottom: 4px solid #059aee;
     }
+
+    .rocket-position {
+      position: absolute;
+      top: 7px;
+      right: 18px;
+    }
   }
 
   /************ 768 ************/
@@ -98,7 +104,7 @@ const Nav = styled.nav`
     transition: top 0.3s; */
 
     button {
-      margin: 5px 25px;
+      margin: 0 25px;
     }
   }
 
@@ -164,6 +170,7 @@ const Navbar = ({ open, setOpen }) => {
     setId(carritoId)
     console.log(id)
   }, [carritoId])
+
   return (
       <Nav id='navbar'>
         <Burger open={open} setOpen={setOpen} />
@@ -202,13 +209,13 @@ const Navbar = ({ open, setOpen }) => {
       </DropdownButton>
         )
         } 
-        <button>
-        <a href="/cohete-de-compra/">
-            <img src={Rocket} alt='shirt' title='Cohete' className='icons-navbar cohete'></img>
-        </a>
-        </button>
         
-      </Nav>
+      <button className='rocket-position'>
+        <a href='/cohete-de-compra'>
+          <img src={Rocket} alt='shirt' title='Cohete' className='icons-navbar '></img>
+        </a>
+      </button>
+    </Nav>
   );
 };
 
