@@ -178,6 +178,7 @@ function UserConfig({history}) {
   const {correo,contrasenaActual,contrasenaNueva,correoActual}=usuario2;
   const usuarioToken= jwt_decode(token);
   useEffect(() => {
+    console.log(usuarioToken)
     ObtenerUsuario(usuarioToken.user.id)
     ObtenerDefault(usuarioToken.user.id)
     setUsuario({

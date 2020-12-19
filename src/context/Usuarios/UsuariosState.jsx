@@ -5,6 +5,7 @@ import{LOGIN,LOGOUT,OBTENER_USUARIO,OBTENER_USUARIO_DEFAULT,
 import useApi from '../../services/api'
 import constants from '../../constants/apiEndPoint'
 import jwt_decode from 'jwt-decode';
+import axios from 'axios'
 
 const initialState={
     token:localStorage.getItem('usuario'),
@@ -62,15 +63,14 @@ export const UsuariosState=({children})=>{
         try {
             const response = await fetchData("GET",`/minoristas/${id}`);
             //setProducts(response.data);
-            //Ya cargó los datos
-            console.log(response)
-            dispatch({
+            //Ya cargó los datos 
+              console.log(response)
+              dispatch({
                 type:OBTENER_USUARIO,
                 payload:response.data.correo
             })
-           
-          } catch (error) {
-            console.log(error);
+          } catch (err) {
+            console.log(err);
     
           }
     }
@@ -79,7 +79,7 @@ export const UsuariosState=({children})=>{
             const nombres = await fetchData("GET",`/minoristas/${id}/direccionDefault`);
             //setProducts(response.data);
             //Ya cargó los datos
-            console.log(nombres.data[0])
+            console.log(nombres)
             dispatch({
                 type:OBTENER_USUARIO_DEFAULT,
                 payload:{

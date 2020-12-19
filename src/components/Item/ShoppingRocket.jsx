@@ -145,13 +145,17 @@ function ShoppingRocket({history,match}) {
   const imageSrc = constants.apiEndPoint + "/public/img/";
 
   useEffect(() => {
-    obtenerCarrito(carritoId)  
+    if(carritoId)obtenerCarrito(carritoId)  
+    
   }, [history])
   return (<>
   {loading?(<Loader/>):(
     <ShoppingRocketContainer>
     <h3>Tu cohete de compra</h3>
-    {articulos&&articulos.map(articulo=>
+    {!articulos || articulos.length<0 || !carritoId ?(<><p><h2>No hay articulos en tu carrito</h2></p>
+    <p>Puedes agregar articulos en nuestra <Link to="/#catalogo">Tienda</Link></p>
+    </>)
+    :(<>{articulos.map(articulo=>
       <ItemPurchaseDiv>
        <div className='grid-shopping-rocket'>
         <Link to={`/productos/${articulo.productoId}`}>
@@ -163,10 +167,11 @@ function ShoppingRocket({history,match}) {
         </div>
       </ItemPurchaseDiv>
       )}
-    <div>
+       <div>
       <Button variant='info' onClick={()=>history.push('/')}>Seguir comprando</Button>
       <Button variant='info' onClick={()=>history.push('/login?redirect=checkout')}>Finalizar compra</Button>
     </div>
+      </>)}
   </ShoppingRocketContainer>
   )}
     

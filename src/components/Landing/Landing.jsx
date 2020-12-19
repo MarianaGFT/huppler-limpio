@@ -6,13 +6,7 @@ import Contact from "../Sections/Contact";
 import Footer from "../Sections/Footer";
 import {carritoContext} from '../../context/Carrito/CarritoState'
 function Landing() {
-  const {carritoId,crearCarrrito}=useContext(carritoContext)
-  useEffect(() => {
-    if(!carritoId){
-      crearCarrrito()
 
-    }
-  }, [])
   return (
     <div>
       <Hero />

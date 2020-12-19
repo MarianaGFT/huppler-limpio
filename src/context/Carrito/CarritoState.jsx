@@ -7,7 +7,7 @@ const initialState={
     articulos:[],
     carritoId:localStorage.getItem('carritoId'),
     success:false,
-    loading:true
+    loading:false
 }
 
 export const carritoContext=createContext(initialState)

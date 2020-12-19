@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect, useContext } from "react";
 import "./App.css";
 import Navbar from "./components/Nav/Navbar";
 import RightNav from "./components/Nav/RightNav";
@@ -18,11 +18,10 @@ import Address from './components/Address/Address'
 import User from './containers/User'
 import  tokenAuth from './services/setToken'
 import RutaPrivada from './services/RutaPrivada'
-const token=localStorage.getItem('usuario')
-if(token){
-   tokenAuth(token)
-}
+import {usuarioContext} from './context/Usuarios/UsuariosState'
+
 function App() {
+ 
   const [open, setOpen] = useState(false);
   return (
 <ProductosState>

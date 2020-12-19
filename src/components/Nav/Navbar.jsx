@@ -11,6 +11,8 @@ import {Link} from 'react-router-dom'
 import {Dropdown,DropdownButton} from 'react-bootstrap'
 import {usuarioContext} from '../../context/Usuarios/UsuariosState'
 import {carritoContext} from '../../context/Carrito/CarritoState'
+import jwt_decode from 'jwt-decode'
+import  tokenAuth from '../../services/setToken'
 const Nav = styled.nav`
   width: 100%;
   height: 60px;
@@ -91,6 +93,10 @@ const Nav = styled.nav`
       top: 7px;
       right: 18px;
     }
+    .cohete-sesion {
+    margin: 0 !important;
+    color: white;
+  }
   }
 
   /************ 768 ************/
@@ -151,9 +157,7 @@ const Nav = styled.nav`
 `;
 
 const Navbar = ({ open, setOpen }) => {
-  const [id,setId]=useState('')
   const {token,LogOut}=useContext(usuarioContext)
-  const{carritoId}=useContext(carritoContext)
  
 
   var prevScrollpos = window.pageYOffset;
@@ -167,9 +171,20 @@ const Navbar = ({ open, setOpen }) => {
     prevScrollpos = currentScrollPos;
   };
   useEffect(() => {
-    setId(carritoId)
-    console.log(id)
-  }, [carritoId])
+    
+    if(token){
+      const decoded = jwt_decode(token);
+      // console.log('Dedoded token: ', decoded);
+    
+      let currentTime = new Date().getTime() / 1000;
+      if (currentTime > decoded.exp){ 
+       LogOut()
+      }else{
+        tokenAuth(token)
+      }
+       
+    }
+  }, [token])
 
   return (
       <Nav id='navbar'>

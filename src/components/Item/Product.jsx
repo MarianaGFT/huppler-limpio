@@ -315,15 +315,18 @@ function Product({match,history}) {
       console.log('nmms no se puede')
       return
     }
+    if(!carritoId){
+      await crearCarrrito()
+    }
     await agregarItem({
       productoId:producto.id,
       varianteId:parseInt(variant),
       cantidad:parseInt(cantidad)
     })
     
-      if(successCarro){
+      
         history.push(`/cohete-de-compra`)
-      }
+  
     
   }
   
