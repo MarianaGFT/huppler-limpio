@@ -2,9 +2,10 @@ import React,{useContext,useEffect,useState} from "react";
 import styled from "styled-components";
 import { Form, Col, Button } from "react-bootstrap";
 import BackgroundSpaceImg7 from "../../assets/background-space7.png";
+import {usuarioContext} from '../../context/Usuarios/UsuariosState'
 import {Redirect} from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
-import {usuarioContext} from '../../context/Usuarios/UsuariosState'
+import Loader from '../Loader/Loader'
 import Swal from "sweetalert2";
 
 const AddressContainer = styled.div`
@@ -35,8 +36,6 @@ const AddressContainer = styled.div`
     border:none;
     color:black 
   }
-  
-  
 
   /************ 768 ************/
   @media screen and (min-width: 768px) {
@@ -51,7 +50,7 @@ const WhiteContainer = styled.div`
   background-color: #f9f6f6;
   height: auto;
   margin: 20px auto;
-  padding: 20px;
+  padding: 10px;
   width: 80%;
 
   button {
@@ -59,9 +58,37 @@ const WhiteContainer = styled.div`
   }
 `;
 
-function Address({history,location}) {
-  const {agregarDireccion,success,loading,token}=useContext(usuarioContext)
+function AddressEdit({match,history}) {
+  
+  const {agregarDireccion,success,loading,token,obtenerDireccion,direccionSelec,editarDireccion}=useContext(usuarioContext)
   const decode=jwt_decode(token)
+  const id=match.params.id
+  useEffect(() => {
+      obtenerDireccion({
+        usuario:decode.user.id,
+        id
+      })   
+     }, [match,history])
+
+     useEffect(() => {
+      console.log(direccionSelec.defaultAddress)
+      setDatos({
+        nombre:direccionSelec.nombre,
+        apellidos:direccionSelec.apellidos,
+        telefono:direccionSelec.telefono,
+        estado:direccionSelec.estado,
+        municipio:direccionSelec.municipio,
+        cp:direccionSelec.cp,
+        colonia:direccionSelec.colonia,
+        calle:direccionSelec.calle,
+        noExterior:direccionSelec.noExterior,
+        noInterior:direccionSelec.noInterior,
+        referencia:direccionSelec.referencia,
+        defaultAddress:direccionSelec.defaultAddress===1?true:false
+      })
+      
+     }, [direccionSelec])
+
   const [datos,setDatos]=useState({
     nombre:'',
     apellidos:'',
@@ -75,6 +102,7 @@ function Address({history,location}) {
     noInterior:'',
     referencia:''
   })
+
   const{nombre,apellidos,telefono,municipio,calle,colonia,cp,noExterior,noInterior,referencia,estado}=datos
   const onChangeHandler=(e)=>{
     setDatos({
@@ -82,26 +110,27 @@ function Address({history,location}) {
       [e.target.name]:e.target.value
     })
   }
-  const redirect=location.search ? location.search.split('=')[1]: '/'
   const submitHandler=async(e)=>{
     e.preventDefault();
     console.log(datos)
-    await agregarDireccion({
-      id:decode.user.id,
+    await editarDireccion({
+      usuario:decode.user.id,
+      id,
       datos
     })
-  
+    if(success){
       await Swal.fire(
-          'Registrado',
-          'Tu dirección ha sido Registrada',
+          'Actualizado',
+          'Tu dirección ha sido actualizada',
           'success'
        )
-      history.push(redirect)
-    
+      history.push('/adress')
+    }
   }
- 
   return (
-    <AddressContainer>
+    <>
+    {loading? (<Loader/>):(
+      <AddressContainer>
       <p>Agregar un domicilio</p>
       <WhiteContainer>
         
@@ -111,8 +140,7 @@ function Address({history,location}) {
               <Form.Control type='text' placeholder='Nombre'
               name="nombre"
               value={nombre}
-              onChange={onChangeHandler}
-              required/>
+              onChange={onChangeHandler}/>
             </Form.Group>
             
             <Form.Group as={Col} controlId='formGridEmail'>
@@ -120,50 +148,45 @@ function Address({history,location}) {
               <Form.Control type='text' placeholder='Apellido' 
                name="apellidos"
                value={apellidos}
-               onChange={onChangeHandler}
-               required/>
+               onChange={onChangeHandler}/>
             </Form.Group>
           
-
+  
           <Form.Group as={Col} controlId='formGridEmail'>
             <Form.Label>Teléfono</Form.Label>
             <Form.Control type='number' placeholder='Ingresa teléfono'
              name="telefono"
              value={telefono}
-             onChange={onChangeHandler} 
-             required/>
+             onChange={onChangeHandler} />
           </Form.Group>
-
+  
           <Form.Row>
             <Form.Group as={Col} controlId='formGridEmail'>
               <Form.Label>Calle</Form.Label>
               <Form.Control type='text' placeholder='Calle'
                name="calle"
                value={calle}
-               onChange={onChangeHandler} 
-               required/>
+               onChange={onChangeHandler} />
             </Form.Group>
-
+  
             <Form.Group as={Col} controlId='formGridEmail'>
               <Form.Label>Colonia</Form.Label>
               <Form.Control type='text' placeholder='Colonia'
                name="colonia"
                value={colonia}
-               onChange={onChangeHandler}
-               required />
+               onChange={onChangeHandler} />
             </Form.Group>
           </Form.Row>
-
+  
           <Form.Row>
             <Form.Group as={Col} controlId='formGridEmail'>
               <Form.Label>N° Exterior</Form.Label>
               <Form.Control type='text' placeholder='N° Exterior'
                name="noExterior"
                value={noExterior}
-               onChange={onChangeHandler}
-               required />
+               onChange={onChangeHandler} />
             </Form.Group>
-
+  
             <Form.Group as={Col} controlId='formGridEmail'>
               <Form.Label>N° Interior</Form.Label>
               <Form.Control type='email' placeholder='N° Interior (opcional)'
@@ -172,7 +195,7 @@ function Address({history,location}) {
               onChange={onChangeHandler} />
             </Form.Group>
           </Form.Row>
-
+  
           <Form.Group controlId='exampleForm.ControlTextarea1'>
             <Form.Label>Indicaciones generales para entregar tus compras</Form.Label>
             <Form.Control
@@ -182,41 +205,38 @@ function Address({history,location}) {
               name="referencia"
               value={referencia}
               onChange={onChangeHandler} 
-              required
             />
           </Form.Group>
-
+  
           <Form.Row>
             <Form.Group as={Col} controlId='formGridCity'>
               <Form.Label>Municipio</Form.Label>
               <Form.Control 
               name="municipio"
               value={municipio}
-              onChange={onChangeHandler} 
-              required/>
+              onChange={onChangeHandler} />
             </Form.Group>
-
+  
             <Form.Group as={Col} controlId='formGridState'>
               <Form.Label>Estado</Form.Label>
               <Form.Control 
               name="estado"
               value={estado}
-              onChange={onChangeHandler}
-              required >
+              onChange={onChangeHandler} >
               </Form.Control>
             </Form.Group>
-
+  
             <Form.Group as={Col} controlId='formGridZip'>
               <Form.Label>Código postal</Form.Label>
               <Form.Control 
               name="cp"
               value={cp}
               onChange={onChangeHandler} 
-              required
               />
             </Form.Group>
           </Form.Row>
-          <Button variant='outline-primary' onClick={()=>history.push('/adress')}>
+          <Button variant='outline-primary' type='submit'
+          onClick={()=>history.push('/adress')}>
             Cancelar
           </Button>
           <Button variant='primary' type='submit'>
@@ -225,7 +245,10 @@ function Address({history,location}) {
         </Form>
       </WhiteContainer>
     </AddressContainer>
+    )}
+    
+  </>
   );
 }
 
-export default Address;
+export default AddressEdit;

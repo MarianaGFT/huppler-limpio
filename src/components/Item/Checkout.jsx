@@ -11,6 +11,8 @@ import AmericanExpress from "../../assets/AmericanExpress.png";
 import Paypal from "../../assets/Paypal.png";
 import Oxxo from "../../assets/Oxxo.png";
 import {usuarioContext} from '../../context/Usuarios/UsuariosState'
+import jwt_decode from 'jwt-decode'
+import Loader from '../Loader/Loader'
 
 const CheckoutContainer = styled.div`
   background-image: url(${BackgroundSpaceImg5});
@@ -258,28 +260,47 @@ const WhiteContainer = styled.div`
 `;
 
 function Checkout({history}) {
-  const {token}=useContext(usuarioContext)
+  const {token,ObtenerDefault,Default,loading:loadingUser,error}=useContext(usuarioContext)
   useEffect(() => {
+   
     if(!token){
       history.push('/login')
     }
+    const usuarioToken=jwt_decode(token)
+   
+
+    const getDefault=async()=>{
+      await ObtenerDefault(usuarioToken.user.id)
+      if(error){
+        history.push('/adress/add?redirect=/checkout')
+      }
+      console.log(Default)
+    }
+    getDefault()
+
   }, [history,token])
+  
+
   return (
     <CheckoutContainer>
       <GridContainer>
-        <div className='divider-container'>
-          <p className='weight-medium-font'>Datos de envío:</p>
-          <WhiteContainer>
-            <img src={Map} alt='map icon' className='img-icon-checkout'></img>
-            <p>
-              <b>C.P. 28973</b>
-              <br></br>
-              Cristóbal Colón #750 - Villa de Álvarez - Colima - Mex<br></br>Mariana Fajardo -
-              3121743226 <br></br>
-              <a href='#'>Editar o elegir otro</a>
-            </p>
-          </WhiteContainer>
-        </div>
+
+      {loadingUser?(<Loader/>):(
+             <div className='divider-container'>
+             <p className='weight-medium-font'>Datos de envío:</p>
+             <WhiteContainer>
+               <img src={Map} alt='map icon' className='img-icon-checkout'></img>
+               <p>
+                 <b>C.P. {Default.cp}</b>
+                 <br></br>
+                 {Default.calle} {Default.noExterior} - {Default.municipio} - {Default.estado} - Mex<br></br>{Default.nombre} {Default.apellidos} -
+                 {Default.telefono} <br></br>
+                 <a href='/adress'>Editar o elegir otro</a>
+               </p>
+             </WhiteContainer>
+           </div>
+            )}
+       
         <div className='divider-container'>
           <p className='weight-medium-font'>Método de pago:</p>
           <div>

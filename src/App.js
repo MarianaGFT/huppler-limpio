@@ -19,6 +19,8 @@ import User from './containers/User'
 import  tokenAuth from './services/setToken'
 import RutaPrivada from './services/RutaPrivada'
 import {usuarioContext} from './context/Usuarios/UsuariosState'
+import AdressEdit from './components/Address/AdressEdit'
+import AddressEdit from "./components/Address/AdressEdit";
 
 function App() {
  
@@ -59,8 +61,9 @@ function App() {
             <Route exact path='/login' component={LogIn} />
             <RutaPrivada exact path='/user' component={UserConfig} />
             <Route exact path='/productos/:id' component={Product}/>
-            <Route exact path='/adresses'component={AddressView}/>
-            <Route exact path='/adresses/add' component={Address}/>
+            <Route exact path='/adress'component={AddressView}/>
+            <Route exact path='/adress/add' component={Address}/>
+            <Route exact path='/adress/:id/edit' component={AddressEdit}/>
           </Switch>
         </Router>
       </div>

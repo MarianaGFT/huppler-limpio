@@ -28,7 +28,7 @@ function useApi() {
       } catch (error) {
         // debugger;
         // console.log('ERROR AQUI WICHU WICHU', error.response);
-        // console.log(error);
+        console.log(error.response);
         if (error.response.status === 403 || error.response.status === 401) {
           
           // console.error('Forbidden');

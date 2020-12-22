@@ -1,4 +1,4 @@
-import {REQUEST,OBTENER_CARRITO,AGREGAR_ITEM_CARRITO,CREAR_CARRITO} from '../types'
+import {REQUEST,OBTENER_CARRITO,AGREGAR_ITEM_CARRITO,CREAR_CARRITO,ERROR_OBTENER_CARRITO} from '../types'
 
 export default(state,action)=>{
 
@@ -26,6 +26,14 @@ export default(state,action)=>{
         case AGREGAR_ITEM_CARRITO:
             return{
                  ...state,
+                success:true,
+                loading:false,
+            }
+        case ERROR_OBTENER_CARRITO:
+            return{
+                ...state,
+                articulos:'',
+                carritoId:'',
                 success:true,
                 loading:false,
             }

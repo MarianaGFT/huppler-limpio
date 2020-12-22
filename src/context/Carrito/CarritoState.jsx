@@ -1,7 +1,13 @@
 import React,{createContext,useReducer} from 'react'
 import CarritoReducer from './CarritoReducer'
-import {REQUEST,CREAR_CARRITO,OBTENER_CARRITO,AGREGAR_ITEM_CARRITO} from '../types'
+import {REQUEST,CREAR_CARRITO,OBTENER_CARRITO,AGREGAR_ITEM_CARRITO,ERROR_OBTENER_CARRITO} from '../types'
 import useApi from "../../services/api";
+import axios from 'axios'
+import constants from '../../constants/apiEndPoint'
+
+const clienteAxios= axios.create({
+    baseURL:constants.apiEndPoint
+})
 
 const initialState={
     articulos:[],
@@ -11,6 +17,7 @@ const initialState={
 }
 
 export const carritoContext=createContext(initialState)
+
 export const  CarritoState=({children})=> {
     const[state,dispatch]=useReducer(CarritoReducer,initialState)
     const fetchData = useApi();
@@ -20,14 +27,18 @@ export const  CarritoState=({children})=> {
             type:REQUEST
         })
         try {
-            const response = await fetchData("GET", `/carrito/${id}`);
+            const response = await clienteAxios.get(`/carrito/${id}`);
             console.log(response.data.productos)
             dispatch({
                 type:OBTENER_CARRITO,
                 payload:response.data.productos
             })
           } catch (error) {
-            console.log(error);
+            console.log(error.response)
+            localStorage.removeItem('carritoId')
+            dispatch({
+                type:ERROR_OBTENER_CARRITO
+            })
           }
     }
     async function crearCarrrito(){
@@ -47,7 +58,7 @@ export const  CarritoState=({children})=> {
           }
     }
     async function agregarItem(producto){
-       
+        console.log(state.carritoId)
         const id=localStorage.getItem('carritoId')
         try {
             const response = await fetchData("PUT",`/carrito/${id}/productos`,(producto));

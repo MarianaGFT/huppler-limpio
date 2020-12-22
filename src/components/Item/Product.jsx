@@ -17,7 +17,9 @@ import constants from '../../constants/apiEndPoint'
 import {productosContext} from '../../context/Producto/ProductoState'
 import Loader from '../Loader/Loader'
 import {carritoContext} from '../../context/Carrito/CarritoState'
+import Swal from "sweetalert2";
 const imageSrc = constants.apiEndPoint + "/public/img/";
+
 
 const ShoppingViewContainer = styled.div`
   background-image: url(${BackgroundSpaceImg5});
@@ -43,9 +45,13 @@ const ShoppingViewContainer = styled.div`
     margin-left:0;
   }
   .form-control{
-    padding:25px;
+    margin:0;
+    height:35px;
+    width:75px;
     margin:0 auto;
     color:black;
+    background-color:white;
+    font-size:20px
   }
 
   .shopping-view-grid {
@@ -302,19 +308,29 @@ function Product({match,history}) {
   const [cantidad,setCantidad]=useState(0)
   const[stock,setStock]=useState([])
 
-  const {success:successCarro,carritoId,crearCarrrito, agregarItem}=useContext(carritoContext)
+  const {success:successCarro,carritoId,crearCarrrito, agregarItem,obtenerCarrito}=useContext(carritoContext)
   useEffect(() => {
     const id=match.params.id
     console.log(id)
     obtenerProducto(id) 
+    updateCarrito()
   }, [success])
 
+  const updateCarrito =async()=>{
+     await obtenerCarrito(carritoId)
+  }
   const agregarCarro=async (e)=>{
     e.preventDefault()
     if(cantidad<=0){
       console.log('nmms no se puede')
+      Swal.fire({
+        icon: "error",
+        title: "Cantidad no selecciona",
+        text: "Selecciona una cantidad de la talla de tu preferencia",
+      });
       return
     }
+
     if(!carritoId){
       await crearCarrrito()
     }
@@ -330,7 +346,7 @@ function Product({match,history}) {
     
   }
   
-  const comprarDirecto=e=>{
+  const  comprarDirecto=async(e)=>{
     e.preventDefault()
     setProductoAenviar({
       productoId:producto.id,
@@ -341,10 +357,11 @@ function Product({match,history}) {
       console.log('nmms no se puede')
       return
     }
+    
     if(!carritoId){
       crearCarrrito()
     }
-    agregarItem(productoEnviar)
+    await agregarItem(productoEnviar)
     if(successCarro){
       history.push('/cohete-de-compra')
     }
@@ -356,6 +373,7 @@ function Product({match,history}) {
     if(e.target.value!==variant){
       setCantidad(0)
     }
+    console.log(stock[0])
    
   }
   return (
@@ -409,14 +427,20 @@ function Product({match,history}) {
             </Modal.Footer>
           </Modal>
           <div className='grid-size-amount'>
-            <p>Cantidad:{cantidad} </p>
+            <p>Cantidad:</p>
             <Form>
               <Form.Group controlId='exampleForm.ControlSelect1'>
-                <Form.Control as='select' value={cantidad}  onChange={(e)=>setCantidad(e.target.value)} >
+              {/*   <Form.Control as='select' value={cantidad}  onChange={(e)=>setCantidad(e.target.value)} >
                 {stock.length>0 && [...Array(stock[0].stock ).keys()].map((x)=>(
                   <option key={x+1} value={x+1}>{x+1}</option>
                                     ))}
-                </Form.Control>
+                </Form.Control> */}
+    <Form.Control type="number" placeholder={stock.length>0?1:0}
+    min={1}
+    max={stock.length>0 && stock[0].stock}
+    disabled={stock.length>0?false:true}
+    value={cantidad}  onChange={(e)=>setCantidad(e.target.value)}
+     />
               </Form.Group>
             </Form>
             <p>unidades</p>
@@ -432,7 +456,7 @@ function Product({match,history}) {
             </Button>
           )*/}
           <div className="btn-cohete">
-          <Button variant='info' type='button' onClick={agregarCarro}>
+          <Button variant='info' type='button'  onClick={agregarCarro} disabled={cantidad<=0?true:false}>
               Añadir al cohete
             </Button>
             </div>
